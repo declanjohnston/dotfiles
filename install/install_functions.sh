@@ -344,8 +344,11 @@ install_parquet_tools() {
 }
 
 install_fzf_tab_completion() {
-    # git clone https://github.com/lincheney/fzf-tab-completion "$HOME/.zprezto/contrib/fzf-tab-completion"
-    git clone https://github.com/Aloxaf/fzf-tab "$HOME/.zprezto/contrib/fzf-tab"
+    if [[ "$OS_TYPE" == "linux" ]]; then
+        git clone https://github.com/lincheney/fzf-tab-completion "$HOME/.zprezto/contrib/fzf-tab-completion"
+    elif [[ "$OS_TYPE" == "mac" ]]; then
+        git clone https://github.com/Aloxaf/fzf-tab "$HOME/.zprezto/contrib/fzf-tab"
+    fi
     echo "fzf-tab installed successfully."
 }
 

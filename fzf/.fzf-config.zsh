@@ -33,8 +33,11 @@ _fzf_compgen_dir() {
 }
 
 #export FZF_COMPLETION_TRIGGER=''
-source $HOME/.zprezto/contrib/fzf-tab/fzf-tab.plugin.zsh
-
+if [[ "$OS_TYPE" == "mac" ]]; then
+  source $HOME/.zprezto/contrib/fzf-tab/fzf-tab.plugin.zsh
+else
+  source $HOME/.zprezto/contrib/fzf-tab-completion/zsh/fzf-zsh-completion.sh
+fi
 # rfz to ctrl-X
 rfz-command() {
   rfz
