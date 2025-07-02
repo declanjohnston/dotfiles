@@ -33,8 +33,7 @@ _fzf_compgen_dir() {
 }
 
 #export FZF_COMPLETION_TRIGGER=''
-source $HOME/.zprezto/contrib/fzf-tab-completion/zsh/fzf-zsh-completion.sh
-bindkey '^I' fzf-completion
+source $HOME/.zprezto/contrib/fzf-tab/fzf-tab.plugin.zsh
 
 # rfz to ctrl-X
 rfz-command() {

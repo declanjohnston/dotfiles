@@ -344,8 +344,9 @@ install_parquet_tools() {
 }
 
 install_fzf_tab_completion() {
-    git clone https://github.com/lincheney/fzf-tab-completion "$HOME/.zprezto/contrib/fzf-tab-completion"
-    echo "fzf-tab-completion installed successfully."
+    # git clone https://github.com/lincheney/fzf-tab-completion "$HOME/.zprezto/contrib/fzf-tab-completion"
+    git clone https://github.com/Aloxaf/fzf-tab "$HOME/.zprezto/contrib/fzf-tab"
+    echo "fzf-tab installed successfully."
 }
 
 install_ml_helpers() {
