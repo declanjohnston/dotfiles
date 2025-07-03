@@ -1,5 +1,14 @@
 source ~/.fzf-env.zsh
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    OS_TYPE="mac"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    OS_TYPE="linux"
+else
+    echo "Unsupported operating system: $OSTYPE"
+    exit 1
+fi
+
 fasd_fzf-preview() {
     fasd -d -R | \
         awk '{print $2}' | \
@@ -32,12 +41,13 @@ _fzf_compgen_dir() {
   fd --type d --hidden --follow --no-ignore -c always --exclude ".git" . "$1"
 }
 
-#export FZF_COMPLETION_TRIGGER=''
+export FZF_COMPLETION_TRIGGER=''
 if [[ "$OS_TYPE" == "mac" ]]; then
   source $HOME/.zprezto/contrib/fzf-tab/fzf-tab.plugin.zsh
 else
   source $HOME/.zprezto/contrib/fzf-tab-completion/zsh/fzf-zsh-completion.sh
 fi
+
 # rfz to ctrl-X
 rfz-command() {
   rfz

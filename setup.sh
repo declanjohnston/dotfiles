@@ -20,6 +20,7 @@ install_dotfiles
 # install essentials
 install_if_dir_missing ~/.zprezto install_zprezto                                # Zsh framework for configuration with themes and plugins
 install_if_dir_missing ~/.zprezto/contrib/fzf-tab-completion install_fzf_tab_completion  # Tab completion with fuzzy search for Zsh
+install_if_dir_missing ~/.zprezto/contrib/fzf-tab install_fzf_tab                        # Tab completion with fuzzy search for Zsh
 install_if_dir_missing ~/.python install_ml_helpers                              # Python utilities for machine learning tasks
 install_if_dir_missing ~/hypers install_hypers                                   # Hyperparameter optimization tools and utilities
 install_if_dir_missing ~/.tmux/plugins/tpm install_tpm                           # Tmux Plugin Manager for extending tmux functionality
