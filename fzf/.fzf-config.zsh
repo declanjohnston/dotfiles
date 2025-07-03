@@ -32,8 +32,7 @@ _fzf_compgen_dir() {
   fd --type d --hidden --follow --no-ignore -c always --exclude ".git" . "$1"
 }
 
-# export FZF_COMPLETION_TRIGGER=''
-
+#export FZF_COMPLETION_TRIGGER=''
 source $HOME/.zprezto/contrib/fzf-tab-completion/zsh/fzf-zsh-completion.sh
 bindkey '^I' fzf-completion
 
