@@ -1,0 +1,86 @@
+#!/bin/zsh
+# ===================================================================
+# AWS EC2 Instance Management Script - Start Instance
+# ===================================================================
+# Manages EC2 instance startup with volume attachment
+# Usage: ./start_aws
+# ===================================================================
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/aws_common.sh"
+
+# Select instance
+select_instance "AWS EC2 Instance Startup" 212
+
+# Check instance state
+INSTANCE_STATE=$(get_instance_state "$INSTANCE_ID")
+
+# Stop instance if needed for volume replacement
+if [[ "$INSTANCE_STATE" = "running" ]]; then
+    gum_warning "Instance is running. Stopping to prepare for root volume replacement..."
+    aws ec2 stop-instances --instance-ids "$INSTANCE_ID" --no-cli-pager > /dev/null
+    wait_for_instance_stopped "$INSTANCE_ID"
+    gum_success "Instance stopped"
+elif [[ "$INSTANCE_STATE" = "stopped" ]]; then
+    gum_success "Instance is already stopped"
+else
+    gum_warning "Instance is in state: $INSTANCE_STATE. Waiting for it to stop..."
+    wait_for_instance_stopped "$INSTANCE_ID"
+    gum_success "Instance stopped"
+fi
+
+# Get current root volume
+CURRENT_ROOT_VOL=$(get_current_root_volume "$INSTANCE_ID" "$DEVICE_NAME")
+
+# Check volume attachment
+ATTACHED_INSTANCE=$(get_volume_attachment_info "$VOLUME_ID" "Volumes[0].Attachments[0].InstanceId")
+ATTACHED_DEVICE=$(get_volume_attachment_info "$VOLUME_ID" "Volumes[0].Attachments[0].Device")
+
+if [[ "$ATTACHED_INSTANCE" = "$INSTANCE_ID" ]] && [[ "$ATTACHED_DEVICE" = "$DEVICE_NAME" ]]; then
+    gum_success "Volume already attached correctly. Skipping detach/attach"
+else
+    # Detach from different instance if needed
+    if [[ "$ATTACHED_INSTANCE" != "None" ]] && [[ "$ATTACHED_INSTANCE" != "$INSTANCE_ID" ]]; then
+        gum_warning "Volume attached to another instance ($ATTACHED_INSTANCE). Detaching..."
+        aws ec2 detach-volume --volume-id "$VOLUME_ID" --instance-id "$ATTACHED_INSTANCE" --no-cli-pager > /dev/null
+        wait_for_volume_available "$VOLUME_ID"
+        gum_success "Detached volume from other instance"
+    fi
+
+    # Detach current root volume if different
+    if [[ -n "$CURRENT_ROOT_VOL" ]] && [[ "$CURRENT_ROOT_VOL" != "$VOLUME_ID" ]]; then
+        gum_info "Detaching current root volume $CURRENT_ROOT_VOL..."
+        aws ec2 detach-volume --volume-id "$CURRENT_ROOT_VOL" --instance-id "$INSTANCE_ID" --device "$DEVICE_NAME" --no-cli-pager > /dev/null
+        wait_for_volume_available "$CURRENT_ROOT_VOL"
+        gum_success "Detached old root volume"
+    fi
+
+    # Attach the desired volume
+    gum_info "Attaching volume $VOLUME_ID..."
+    aws ec2 attach-volume \
+        --volume-id "$VOLUME_ID" \
+        --instance-id "$INSTANCE_ID" \
+        --device "$DEVICE_NAME" --no-cli-pager > /dev/null
+
+    wait_for_volume_attached "$VOLUME_ID"
+    gum_success "Volume attached"
+fi
+
+# Start instance
+gum_info "Starting instance..."
+aws ec2 start-instances --instance-ids "$INSTANCE_ID" --no-cli-pager > /dev/null
+wait_for_instance_running "$INSTANCE_ID"
+gum_success "Instance started"
+
+# Get public IP and display
+PUBLIC_IP=$(get_public_ip "$INSTANCE_ID")
+
+# Update SSH config with new IP
+update_ssh_config "$PUBLIC_IP"
+
+gum_box_success "Instance ready at: $PUBLIC_IP"
+
+# Optional SSH connection
+if gum_confirm "Connect via SSH?"; then
+    ssh -i "$KEY_PATH" "$SSH_USER@$PUBLIC_IP"
+fi

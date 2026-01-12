@@ -1,36 +1,5 @@
-# ===================================================================
-# PATH AND ENVIRONMENT SETUP
-# ===================================================================
-
-# Python Path Configuration
-export PYTHONPATH=~/.python:~/.roma-scripts:$PYTHONPATH
-
-# Consolidated PATH Setup (order matters - earlier entries take precedence)
-PATH_ADDITIONS=(
-    "$HOME/.local/bin"              # Local user binaries
-    "$HOME/bin"                     # Personal scripts
-    "/Users/vmasrani/.claude"       # Claude CLI
-    "$HOME/.npm-global/bin"         # Global npm packages
-    "$HOME/go/bin"                  # Go binaries
-    "/usr/local/go/bin"             # Go installation
-    "$HOME/.nvm/versions/node/v18.20.8/bin"  # Node.js binaries (version-specific)
-)
-
-# Add paths to PATH if they exist and aren't already present
-for path_dir in "${PATH_ADDITIONS[@]}"; do
-    if [[ -d "$path_dir" && ":$PATH:" != *":$path_dir:"* ]]; then
-        export PATH="$path_dir:$PATH"
-    fi
-done
-
-export BAT_THEME="Solarized (light)"
-# export SSL_CERT_DIR='/etc/ssl/certs'
-# export REQUESTS_CA_BUNDLE='/etc/ssl/certs/ca-certificates.crt'
-export WANDB_ENTITY='vadenmasrani'
-
-# REMOVE DUPLICATES
-export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!seen[$0]++' | sed 's/:$//')
-export PYTHONPATH=$(echo -n $PYTHONPATH | awk -v RS=: -v ORS=: '!seen[$0]++' | sed 's/:$//')
+# Source PATH management
+[[ -f ~/.paths.zsh ]] && source ~/.paths.zsh
 
 # ===================================================================
 # APPLICATION ALIASES
@@ -48,11 +17,14 @@ alias less='less -M -X -g -i -J --underline-special --SILENT'
 # ===================================================================
 # FILE LISTING ALIASES (EZA)
 # ===================================================================
-alias L='eza -aHl --icons --git --grid --time-style relative --group-directories-first'
-alias l='eza -aHl --icons --git --time-style relative --group-directories-first'
-alias lt='eza -aHl --icons --git --sort=modified --time-style relative --group-directories-first'
-alias lf='eza -aHl --icons --git --sort=size --total-size --time-style relative --group-directories-first'
-alias ld='eza -aHlD --icons --git --time-style relative --group-directories-first'
+alias L='eza -aHl --icons --grid --time-style relative --group-directories-first'
+alias l='eza -aHl --icons --time-style relative --group-directories-first'
+alias lt='eza -aHl --icons --sort=modified --time-style relative --group-directories-first'
+alias lf='eza -aHl --icons --sort=size --total-size --time-style relative --group-directories-first'
+alias ld='eza -aHlD --icons --time-style relative --group-directories-first'
+
+
+
 alias p='fzf-preview'
 
 # ===================================================================
@@ -71,7 +43,7 @@ alias .8='cd ../../../../../../../../'      # Go back 8 directory levels
 alias .9='cd ../../../../../../../../../'   # Go back 9 directory levels
 
 #tree alias's"
-export EZA_TREE_IGNORE='.venv|.git|.mypy_cache|__pycache__|.pytest_cache'
+export EZA_TREE_IGNORE='.venv|.git|.mypy_cache|__pycache__|.pytest_cache|node_modules'
 
 alias t='eza -aHl --icons --tree --no-user --no-permissions -I "$EZA_TREE_IGNORE"'
 alias t1='eza -aHl --icons --tree --no-user --no-permissions -L 1 -I "$EZA_TREE_IGNORE"'
@@ -106,22 +78,15 @@ alias rsync='rsync -avz --compress --verbose --human-readable --partial --progre
 alias ga="lazygit"
 alias bfs='bfs -L'
 alias chals='alias | grep' #check aliases
-alias rename='agent file_renamer'
 alias npp='uv init . && uv add ipython joblib matplotlib numpy pandas pandas_flavor polars pyjanitor requests rich IProgress scikit_learn seaborn torch tqdm pandas numpy requests ipdb PyYAML ipykernel openai ollama git+https://github.com/vmasrani/machine_learning_helpers.git mysql-connector-python'
 alias act='source .venv/bin/activate'
 
-if [ -d "$HOME/.cursor-server/extensions/*tomrijndorp*" ]; then
-    export EXTENSION_PATH=$(find ~/.cursor-server/extensions  -type d -name 'tomrijndorp*')
-fi
 
 
 
 # bfs
 alias bfs='bfs -L '
 
-
-# Define the htop filter as an environment variable
-export HTOP_FILTER='sshd|jupyter/runtime/kernel|.cursor-server|/usr/bin/dockerd|/usr/lib/snapd/snapd|amazon|containerd|ssh-agent|gitstatus|zsh|sleep'
 
 # Update the get_filtered_pids function to use the environment variable
 get_filtered_pids() {
@@ -133,3 +98,19 @@ alias ht='htop -t -u "$(whoami)" -p "$(get_filtered_pids)"'
 alias archive-agent='/Users/vmasrani/dev/archive-agent/Archive-Agent/archive-agent.sh'
 alias cc='claude'
 alias ccc='claude --continue'
+alias upd='update-packages'
+alias updq='update-packages --quiet'
+
+
+# uwu shorcut
+alias ::='uwu-cli'
+alias :::='uwu'
+
+alias gpt='oai'
+
+# codex() {
+#   command codex --dangerously-bypass-approvals-and-sandbox --enable web_search_request -s workspace-write -c "sandbox_workspace_write.writable_roots=['/Users/my-user/.cache/uv']" "$@"
+# }
+
+export TABSTACK_API_KEY="23d0b47596440ff73e012c941e343dba6c861df78c5346047dfa340d7aa56877"
+alias g='glow'
