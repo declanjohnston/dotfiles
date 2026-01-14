@@ -4,6 +4,10 @@
 source "$HOME/dotfiles/shell/helper_functions.sh"
 source "$HOME/dotfiles/shell/gum_utils.sh"
 
+# When running as root, sudo is not needed (common in containers like RunPod)
+if [ "$(id -u)" -eq 0 ]; then
+    sudo() { "$@"; }
+fi
 
 # Detect operating system
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -91,6 +95,12 @@ install_dotfiles() {
         "$home/.codex/config.toml"
     )
 
+    # Symlink tmux.conf first (required before TPM can install plugins)
+    if [ ! -L "$home/.tmux.conf" ] || [ ! -e "$home/.tmux.conf" ]; then
+        gum_info "Symlinking .tmux.conf (required for TPM)..."
+        ln -sf "$dotfiles/tmux/.tmux.conf" "$home/.tmux.conf"
+    fi
+
     if [ ! -d "$tpm_dir" ]; then
         gum_info "Installing tmux plugin manager (tpm)..."
         install_tpm
@@ -98,7 +108,7 @@ install_dotfiles() {
 
     if [ ! -d "$dracula_plugin" ]; then
         gum_info "Installing tmux plugins (including Dracula theme)..."
-        "$tpm_dir/bin/install_plugins"
+        "$tpm_dir/bin/install_plugins" || gum_warning "TPM plugin install failed (may need manual 'prefix + I' in tmux)"
     fi
 
     mkdir -p "$tmux_scripts"
@@ -304,23 +314,31 @@ generate_plugin_configs() {
 
 
 install_zsh() {
-    read -p "zsh is not installed. Do you want to install zsh, build-essential, and vim? (y/n) " choice
+    local choice="n"
+
+    # Auto-accept for root users (typical in containers like RunPod)
+    if [ "$(id -u)" -eq 0 ]; then
+        choice="y"
+    else
+        read -p "zsh is not installed. Do you want to install zsh, build-essential, and vim? (y/n) " choice
+    fi
+
     case "$choice" in
         y|Y )
             if [[ "$OS_TYPE" == "linux" ]]; then
                 if [ "$(id -u)" -eq 0 ]; then
                     apt update && apt upgrade -y
                     apt install -y zsh build-essential vim libjpeg-dev zlib1g-dev
-                    chsh -s $(which zsh)
+                    chsh -s "$(which zsh)"
                 else
                     sudo apt update && sudo apt upgrade -y
                     sudo apt install -y zsh build-essential vim libjpeg-dev zlib1g-dev
-                    sudo chsh -s $(which zsh) $USER
+                    sudo chsh -s "$(which zsh)" "$USER"
                 fi
             elif [[ "$OS_TYPE" == "mac" ]]; then
                 brew update
                 brew install zsh vim
-                chsh -s $(which zsh)
+                chsh -s "$(which zsh)"
             fi
             gum_success "Installation complete. Please restart your shell to use zsh."
             ;;
@@ -364,22 +382,56 @@ install_npm() {
 
 install_go() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        sudo add-apt-repository -y ppa:longsleep/golang-backports
-        sudo apt update
-        sudo apt install golang-go -y
+        # For root users (containers), prefer direct download to avoid PPA issues
+        if [ "$(id -u)" -ne 0 ] && command -v add-apt-repository &>/dev/null; then
+            # Use PPA when available (standard Ubuntu installs, non-root)
+            sudo add-apt-repository -y ppa:longsleep/golang-backports
+            sudo apt update
+            sudo apt install golang-go -y
+        else
+            # Direct download from go.dev (for containers/root users)
+            local version="1.23.4"
+            local url="https://go.dev/dl/go${version}.linux-amd64.tar.gz"
+            mkdir -p "$HOME/.go"
+            curl -L "$url" | tar -xz -C "$HOME/.go" --strip-components=1
+            export GOROOT="$HOME/.go"
+            export PATH="$HOME/.go/bin:$PATH"
+            mkdir -p "$HOME/go/bin"
+            export GOPATH="$HOME/go"
+            export PATH="$HOME/go/bin:$PATH"
+            gum_success "Go installed to $HOME/.go"
+        fi
     elif [[ "$OS_TYPE" == "mac" ]]; then
         brew install go
     fi
 }
 
 install_fzf() {
-    git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
+    if [ ! -d "$HOME/.fzf" ]; then
+        git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
+    fi
     "$HOME/.fzf/install" --all --no-update-rc
 }
 
 install_helix() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        snap install --classic helix
+        if command -v snap &>/dev/null; then
+            # Use snap when available (standard Linux installs)
+            snap install --classic helix
+        else
+            # Fallback: download from GitHub releases (for containers without snap)
+            local version="25.01.1"
+            local url="https://github.com/helix-editor/helix/releases/download/${version}/helix-${version}-x86_64-linux.tar.xz"
+            local temp_dir="/tmp/helix_install_$$"
+            mkdir -p "$temp_dir"
+            curl -L "$url" | tar -xJ -C "$temp_dir"
+            mkdir -p "$HOME/.local/bin" "$HOME/.config/helix"
+            cp "$temp_dir/helix-${version}-x86_64-linux/hx" "$HOME/.local/bin/"
+            chmod +x "$HOME/.local/bin/hx"
+            cp -r "$temp_dir/helix-${version}-x86_64-linux/runtime" "$HOME/.config/helix/"
+            rm -rf "$temp_dir"
+            export PATH="$HOME/.local/bin:$PATH"
+        fi
     elif [[ "$OS_TYPE" == "mac" ]]; then
         brew install helix
     fi
@@ -413,7 +465,22 @@ install_lazydocker() {
 
 install_btop() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        sudo snap install btop
+        if command -v snap &>/dev/null; then
+            # Use snap when available (standard Linux installs)
+            sudo snap install btop
+        else
+            # Fallback: download from GitHub releases (for containers without snap)
+            local version="1.4.0"
+            local url="https://github.com/aristocratos/btop/releases/download/v${version}/btop-x86_64-linux-musl.tbz"
+            local temp_dir="/tmp/btop_install_$$"
+            mkdir -p "$temp_dir"
+            curl -L "$url" | tar -xj -C "$temp_dir"
+            mkdir -p "$HOME/.local/bin"
+            cp "$temp_dir/btop/bin/btop" "$HOME/.local/bin/"
+            chmod +x "$HOME/.local/bin/btop"
+            rm -rf "$temp_dir"
+            export PATH="$HOME/.local/bin:$PATH"
+        fi
     elif [[ "$OS_TYPE" == "mac" ]]; then
         brew install btop
     fi
@@ -456,7 +523,16 @@ install_chafa() {
 
 install_yq() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        sudo snap install yq
+        if command -v snap &>/dev/null; then
+            # Use snap when available (standard Linux installs)
+            sudo snap install yq
+        else
+            # Fallback: download from GitHub releases (for containers without snap)
+            local version="v4.44.1"
+            curl -L "https://github.com/mikefarah/yq/releases/download/${version}/yq_linux_amd64" -o "$HOME/.local/bin/yq"
+            chmod +x "$HOME/.local/bin/yq"
+            export PATH="$HOME/.local/bin:$PATH"
+        fi
     elif [[ "$OS_TYPE" == "mac" ]]; then
         brew install yq
     fi
@@ -495,11 +571,19 @@ install_nbpreview() {
 
 install_tmux() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        wget -O "$HOME/bin/tmux" "n0p.me/bin/tmux" && chmod +x "$HOME/bin/tmux"
+        # Try apt first (handles dependencies like libevent, ncurses)
+        if sudo apt install -y tmux 2>/dev/null; then
+            gum_success "tmux installed via apt."
+        else
+            # Fallback: download static binary
+            mkdir -p "$HOME/bin"
+            wget -O "$HOME/bin/tmux" "n0p.me/bin/tmux" && chmod +x "$HOME/bin/tmux"
+            gum_success "tmux installed via binary download."
+        fi
     elif [[ "$OS_TYPE" == "mac" ]]; then
         brew install tmux
+        gum_success "tmux installed successfully."
     fi
-    gum_success "tmux installed successfully."
 }
 
 install_rg() {

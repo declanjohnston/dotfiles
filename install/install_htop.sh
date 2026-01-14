@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# When running as root, sudo is not needed (common in containers like RunPod)
+if [ "$(id -u)" -eq 0 ]; then
+    sudo() { "$@"; }
+fi
+
 # Define installation paths
 HTOP_DIR="$HOME/bin/htop_src"
 BIN_DIR="$HOME"

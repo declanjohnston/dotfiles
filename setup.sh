@@ -1,5 +1,5 @@
-#!/bin/zsh
-# shellcheck shell=zsh
+#!/bin/bash
+# shellcheck shell=bash
 # shellcheck source=install/install_functions.sh
 # ===================================================================
 # Dotfiles Setup Script
@@ -10,13 +10,19 @@
 
 set -e
 
+# Ensure custom bin directories are in PATH for command detection
+export PATH="$HOME/.go/bin:$HOME/go/bin:$HOME/.local/bin:$HOME/bin:$HOME/.cargo/bin:$HOME/.fzf/bin:$PATH"
+
 # Source the installation functions
 source "./install/install_functions.sh"
 source "./shell/.aliases-and-envs.zsh"
 source "./shell/gum_utils.sh"
 
-# install zsh
+# install zsh (must happen first, before other tools)
 install_if_missing zsh install_zsh
+
+# install tmux early (required by TPM and install_dotfiles)
+install_if_missing tmux install_tmux
 
 # install dotfiles
 install_if_dir_missing ~/dotfiles/local install_local_dotfiles
@@ -58,7 +64,6 @@ install_if_missing lazydocker install_lazydocker # Terminal UI for managing Dock
 install_if_missing btop install_btop # Resource monitor with CPU, memory, disk, network stats
 install_if_missing ctop install_ctop # Container metrics and monitoring
 install_if_missing bat install_bat # Syntax highlighting cat replacement
-install_if_missing tmux install_tmux # Terminal multiplexer for multiple sessions
 install_if_missing rg install_rg # Fast recursive grep alternative
 install_if_missing fd install_fd # Fast find alternative
 install_if_missing jq install_jq # Command-line JSON processor
