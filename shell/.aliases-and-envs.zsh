@@ -78,7 +78,7 @@ alias rsync='rsync -avz --compress --verbose --human-readable --partial --progre
 alias ga="lazygit"
 alias bfs='bfs -L'
 alias chals='alias | grep' #check aliases
-alias npp='uv init . && uv add ipython joblib matplotlib numpy pandas pandas_flavor polars pyjanitor requests rich IProgress scikit_learn seaborn torch tqdm pandas numpy requests ipdb PyYAML ipykernel openai ollama git+https://github.com/vmasrani/machine_learning_helpers.git mysql-connector-python'
+alias npp='uv init . && uv add ipython joblib matplotlib numpy pandas pandas_flavor polars pyjanitor requests rich IProgress scikit_learn seaborn torch tqdm pandas numpy requests ipdb PyYAML ipykernel openai ollama git+https://github.com/vmasrani/machine_learning_helpers.git mysql-connector-python datasets transformers trl'
 alias act='source .venv/bin/activate'
 
 
@@ -95,7 +95,7 @@ get_filtered_pids() {
 
 alias ht='htop -t -u "$(whoami)" -p "$(get_filtered_pids)"'
 
-alias archive-agent='/Users/vmasrani/dev/archive-agent/Archive-Agent/archive-agent.sh'
+alias archive-agent='/Users/declan/dev/archive-agent/Archive-Agent/archive-agent.sh'
 alias cc='claude'
 alias ccc='claude --continue'
 alias upd='update-packages'

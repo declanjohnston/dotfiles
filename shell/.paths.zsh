@@ -20,7 +20,7 @@ PATH_ADDITIONS=(
     "$HOME/.local/bin"              # Local user binaries
     "$HOME/bin"                     # Personal scripts
     "$HOME/tools"                   # Custom tools from dotfiles
-    "/Users/vmasrani/.claude"       # Claude CLI
+    "/Users/declan/.claude"       # Claude CLI
     "$HOME/.bun/bin"                # Bun runtime
     "$HOME/.npm-global/bin"         # Global npm packages
     "$NODE_BIN_PATH"                # Node.js binaries (dynamic version)
@@ -44,7 +44,7 @@ export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!seen[$0]++' | sed 's/:$//')
 
 # Additional Environment Variables
 export BAT_THEME="Solarized (light)"
-export WANDB_ENTITY='vadenmasrani'
+export WANDB_ENTITY='djohnston'
 
 # Cursor Extension Path
 if [ -d "$HOME/.cursor-server/extensions/*tomrijndorp*" ]; then

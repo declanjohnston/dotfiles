@@ -9,9 +9,9 @@
 # confirmations, etc.) must go above this block; everything else may go below.
 
 # Fix for Cursor Agent terminal hangs - skip loading rest of config in Agent mode
-# if [[ "$CURSOR_AGENT" == "1" || "$COMPOSER_NO_INTERACTION" == "1" || "$PIP_NO_INPUT" == "true" ]]; then
-#   return
-# fi
+if [[ "$CURSOR_AGENT" == "1" || "$COMPOSER_NO_INTERACTION" == "1" || "$PIP_NO_INPUT" == "true" ]]; then
+  return
+fi
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -82,7 +82,7 @@ bindkey '^[[1;3C' forward-word
 
 
 # bun completions
-[ -s "/Users/vmasrani/.bun/_bun" ] && source "/Users/vmasrani/.bun/_bun"
+[ -s "/Users/declan/.bun/_bun" ] && source "/Users/declan/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -93,4 +93,4 @@ export OLLAMA_CONTEXT_LENGTH=40000
 # HACK
 export OLLAMA_CONTEXT_LENGTH=40000
 
-alias claude-mem='bun "/Users/vmasrani/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+alias claude-mem='bun "/Users/declan/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'

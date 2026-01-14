@@ -13,7 +13,7 @@ fi
 . "$HOME/.cargo/env"
 
 # Begin added by argcomplete
-fpath=( /Users/vmasrani/dev/git_repos_to_maintain/hypers_new/.venv/lib/python3.12/site-packages/argcomplete/bash_completion.d "${fpath[@]}" )
+fpath=( /Users/declan/dev/git_repos_to_maintain/hypers_new/.venv/lib/python3.12/site-packages/argcomplete/bash_completion.d "${fpath[@]}" )
 # End added by argcomplete
 
 # Begin added by argcomplete
