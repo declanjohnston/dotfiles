@@ -1,5 +1,5 @@
-#!/bin/bash
-# shellcheck shell=bash
+#!/bin/zsh
+# shellcheck shell=zsh
 # shellcheck source=install/install_functions.sh
 # ===================================================================
 # Dotfiles Setup Script
