@@ -23,7 +23,9 @@ fi
 export PATH="$HOME/bin:$HOME/bin/bin:$HOME/.local/bin:$PATH"
 echo "hello from profile"
 
-. "$HOME/.cargo/env"
+# Source cargo environment if it exists (only if Rust/Cargo is installed)
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
 
-. "$HOME/.local/bin/env"
+# Source local env if it exists
+[[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
 echo "Sourcing $0"
