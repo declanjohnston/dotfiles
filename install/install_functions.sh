@@ -86,6 +86,7 @@ install_dotfiles() {
     # Targets we always want to match the repo source (delete existing non-matching
     # file/dir and re-symlink). This keeps setup idempotent for Claude/Codex config.
     declare -a force_replace_targets=(
+        "$home/.gitconfig"
         "$home/.claude/commands"
         "$home/.claude/hooks"
         "$home/.claude/skills"
@@ -226,6 +227,9 @@ install_dotfiles() {
         # local dotfiles
         "$dotfiles/local/.local_env.sh:$home/.local_env.sh"
         "$dotfiles/local/.secrets:$home/.secrets"
+
+        # git config
+        "$dotfiles/.gitconfig:$home/.gitconfig"
 
         # helix
         "$dotfiles/editors/hx_languages.toml:$home/.config/helix/languages.toml"
