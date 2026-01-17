@@ -3,6 +3,8 @@
 # RunPod Setup Script
 # ===================================================================
 # Run this when a RunPod pod starts to bootstrap the environment.
+# Uses --minimal flag to skip heavy installs (Helix, Cargo, Go, Node).
+# Optimized for Cursor development (~5-10 min vs ~60-80 min).
 #
 # Docker Command (one-liner for RunPod template):
 #   bash -c "git clone https://github.com/declanjohnston/dotfiles.git /workspace/dotfiles 2>/dev/null || true && /workspace/dotfiles/runpod_setup.sh"
@@ -42,6 +44,6 @@ fi
 source "$DOTFILES_DIR/install/install_functions.sh"
 install_if_missing zsh install_zsh
 
-# Run setup.sh from zsh, mark as bootstrapped, and stay in zsh
+# Run setup.sh from zsh with --minimal flag, mark as bootstrapped, and stay in zsh
 cd "$DOTFILES_DIR"
-exec zsh -c "./setup.sh && touch '$BOOTSTRAP_MARKER' && echo '' && echo '✓ RunPod setup complete! Starting zsh...'"
+exec zsh -c "./setup.sh --minimal && touch '$BOOTSTRAP_MARKER' && echo '' && echo '✓ RunPod setup complete! Starting zsh...'"
