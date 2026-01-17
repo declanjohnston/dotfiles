@@ -332,11 +332,16 @@ install_zsh() {
             if [[ "$OS_TYPE" == "linux" ]]; then
                 if [ "$(id -u)" -eq 0 ]; then
                     apt update && apt upgrade -y
-                    apt install -y zsh build-essential vim libjpeg-dev zlib1g-dev
+                    apt install -y zsh build-essential vim libjpeg-dev zlib1g-dev locales
+                    # Generate en_US.UTF-8 locale to fix perl warnings
+                    locale-gen en_US.UTF-8
+                    update-locale LANG=en_US.UTF-8
                     chsh -s "$(which zsh)"
                 else
                     sudo apt update && sudo apt upgrade -y
-                    sudo apt install -y zsh build-essential vim libjpeg-dev zlib1g-dev
+                    sudo apt install -y zsh build-essential vim libjpeg-dev zlib1g-dev locales
+                    sudo locale-gen en_US.UTF-8
+                    sudo update-locale LANG=en_US.UTF-8
                     sudo chsh -s "$(which zsh)" "$USER"
                 fi
             elif [[ "$OS_TYPE" == "mac" ]]; then
@@ -575,14 +580,19 @@ install_nbpreview() {
 
 install_tmux() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        # Try apt first (handles dependencies like libevent, ncurses)
-        if sudo apt install -y tmux 2>/dev/null; then
-            gum_success "tmux installed via apt."
+        # Check if apt version is 3.3+
+        local apt_version=$(apt-cache policy tmux 2>/dev/null | grep -oP 'Candidate: \K[0-9.]+' || echo "0")
+        
+        if [[ $(echo "$apt_version" | cut -d. -f1) -ge 3 ]] && [[ $(echo "$apt_version" | cut -d. -f2) -ge 3 ]]; then
+            # apt has tmux 3.3+, use it
+            sudo apt install -y tmux
+            gum_success "tmux $apt_version installed via apt."
         else
-            # Fallback: download static binary
+            # apt version too old or not available, use static binary (3.3a+)
+            gum_info "apt tmux version ($apt_version) is too old, installing static binary (3.3a+)..."
             mkdir -p "$HOME/bin"
             wget -O "$HOME/bin/tmux" "n0p.me/bin/tmux" && chmod +x "$HOME/bin/tmux"
-            gum_success "tmux installed via binary download."
+            gum_success "tmux 3.3a+ installed via binary download to ~/bin/tmux"
         fi
     elif [[ "$OS_TYPE" == "mac" ]]; then
         brew install tmux
