@@ -44,6 +44,62 @@ fi
 source "$DOTFILES_DIR/install/install_functions.sh"
 install_if_missing zsh install_zsh
 
+# Configure tokens from RunPod secrets
+echo "🔐 Configuring API tokens..."
+
+# Create local env file for persistent environment variables
+LOCAL_ENV_FILE="$DOTFILES_DIR/local/.local_env.sh"
+mkdir -p "$(dirname "$LOCAL_ENV_FILE")"
+touch "$LOCAL_ENV_FILE"
+
+# Hugging Face token
+if [ -n "$HF_TOKEN" ]; then
+    mkdir -p "$HOME/.huggingface"
+    echo "$HF_TOKEN" > "$HOME/.huggingface/token"
+    
+    # Add to local env if not already present
+    if ! grep -q "export HF_TOKEN" "$LOCAL_ENV_FILE" 2>/dev/null; then
+        echo "export HF_TOKEN='$HF_TOKEN'" >> "$LOCAL_ENV_FILE"
+    fi
+    echo "✓ Configured Hugging Face token"
+fi
+
+# Weights & Biases token
+if [ -n "$WANDB_TOKEN" ]; then
+    # Create/update .netrc for wandb
+    cat > "$HOME/.netrc" << EOF
+machine api.wandb.ai
+  login user
+  password $WANDB_TOKEN
+EOF
+    chmod 600 "$HOME/.netrc"
+    
+    # Also set in wandb settings
+    mkdir -p "$HOME/.config/wandb"
+    echo "[default]" > "$HOME/.config/wandb/settings"
+    echo "api_key = $WANDB_TOKEN" >> "$HOME/.config/wandb/settings"
+    
+    # Add to local env if not already present
+    if ! grep -q "export WANDB_TOKEN" "$LOCAL_ENV_FILE" 2>/dev/null; then
+        echo "export WANDB_TOKEN='$WANDB_TOKEN'" >> "$LOCAL_ENV_FILE"
+    fi
+    echo "✓ Configured Weights & Biases token"
+fi
+
+# GitHub token (for git operations)
+if [ -n "$GITHUB_TOKEN" ]; then
+    # Configure git to use token for HTTPS operations
+    git config --global credential.helper store
+    echo "https://oauth2:${GITHUB_TOKEN}@github.com" > "$HOME/.git-credentials"
+    chmod 600 "$HOME/.git-credentials"
+    
+    # Add to local env if not already present
+    if ! grep -q "export GITHUB_TOKEN" "$LOCAL_ENV_FILE" 2>/dev/null; then
+        echo "export GITHUB_TOKEN='$GITHUB_TOKEN'" >> "$LOCAL_ENV_FILE"
+    fi
+    echo "✓ Configured GitHub token for git operations"
+fi
+
 # Run setup.sh from zsh with --minimal flag, mark as bootstrapped, and stay in zsh
 cd "$DOTFILES_DIR"
 exec zsh -c "./setup.sh --minimal && touch '$BOOTSTRAP_MARKER' && echo '' && echo '✓ RunPod setup complete! Starting zsh...'"
