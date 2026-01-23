@@ -136,6 +136,9 @@ else
     update_helix_grammars
 fi
 
+# Configure Claude MCP servers (runs after Claude is installed in either mode)
+configure_claude_mcp_servers
+
 if [[ "$MINIMAL_INSTALL" == true ]]; then
     gum_box_success "✓ Minimal setup completed! (~5-10 min)\n\nInstalled: zsh, tmux, fzf, rg, fd, bat, jq, yq, eza, uv, uvx tools, claude\nSkipped: Helix, Cargo/Rust, Go, Node/npm, LSPs (Cursor has these)\n\nReady for Cursor development!"
 else

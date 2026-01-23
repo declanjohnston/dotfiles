@@ -1,1 +1,49 @@
-/Users/declan/dotfiles/maintained_global_claude/settings.json
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "USE_BUILTIN_RIPGREP": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(uv:*)",
+      "Bash(find:*)",
+      "Bash(fd:*)",
+      "Bash(rg:*)",
+      "Bash(mv:*)",
+      "Bash(grep:*)",
+      "Bash(npm:*)",
+      "Bash(ls:*)",
+      "Bash(cp:*)",
+      "Write",
+      "Edit",
+      "Bash(chmod:*)",
+      "Bash(touch:*)"
+    ],
+    "deny": []
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "zsh ~/.claude/statusline.sh"
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-code-plugins": false,
+    "frontend@mag-claude-plugins": false,
+    "code-analysis@mag-claude-plugins": false,
+    "bun@mag-claude-plugins": false,
+    "orchestration@mag-claude-plugins": false,
+    "pyright-lsp@claude-plugins-official": false,
+    "rust-analyzer-lsp@claude-plugins-official": false,
+    "frontend-design@claude-plugins-official": false,
+    "context7@claude-plugins-official": false,
+    "typescript-lsp@claude-plugins-official": false,
+    "ralph-wiggum@claude-plugins-official": false,
+    "ralph-wiggum@claude-code-plugins": false,
+    "commit-commands@claude-plugins-official": false,
+    "claude-mem@thedotmack": false
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1754286002006
+  },
+  "model": "opus"
+}
