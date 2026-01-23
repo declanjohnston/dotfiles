@@ -40,6 +40,25 @@ if [ ! -L "$HOME/dotfiles" ]; then
     echo "✓ Symlinked ~/dotfiles -> $DOTFILES_DIR"
 fi
 
+# Redirect caches to /workspace to avoid filling root filesystem
+# Root overlay is typically 20GB and fills up quickly with model downloads
+echo "📁 Setting up cache symlinks to /workspace..."
+mkdir -p /workspace/.cache/huggingface /workspace/.cache/uv
+
+if [ ! -L "$HOME/.cache/huggingface" ]; then
+    rm -rf "$HOME/.cache/huggingface" 2>/dev/null || true
+    mkdir -p "$HOME/.cache"
+    ln -sf /workspace/.cache/huggingface "$HOME/.cache/huggingface"
+    echo "✓ Symlinked ~/.cache/huggingface -> /workspace/.cache/huggingface"
+fi
+
+if [ ! -L "$HOME/.cache/uv" ]; then
+    rm -rf "$HOME/.cache/uv" 2>/dev/null || true
+    mkdir -p "$HOME/.cache"
+    ln -sf /workspace/.cache/uv "$HOME/.cache/uv"
+    echo "✓ Symlinked ~/.cache/uv -> /workspace/.cache/uv"
+fi
+
 # Source install functions and install zsh
 source "$DOTFILES_DIR/install/install_functions.sh"
 install_if_missing zsh install_zsh
