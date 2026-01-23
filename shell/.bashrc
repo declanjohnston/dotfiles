@@ -151,4 +151,4 @@ echo "hello from bashrc"
 # . "$HOME/.local/bin/env"
 echo "Sourcing $0"
 
-alias claude-mem='bun "/Users/declan/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+alias claude-mem='bun "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'

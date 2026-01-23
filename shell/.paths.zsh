@@ -20,7 +20,7 @@ PATH_ADDITIONS=(
     "$HOME/.local/bin"              # Local user binaries
     "$HOME/bin"                     # Personal scripts
     "$HOME/tools"                   # Custom tools from dotfiles
-    "/Users/declan/.claude"       # Claude CLI
+    "$HOME/.claude"               # Claude CLI
     "$HOME/.bun/bin"                # Bun runtime
     "$HOME/.npm-global/bin"         # Global npm packages
     "$NODE_BIN_PATH"                # Node.js binaries (dynamic version)

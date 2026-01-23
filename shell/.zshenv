@@ -14,9 +14,7 @@ fi
 # Source cargo environment if it exists (only if Rust/Cargo is installed)
 [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
 
-# Begin added by argcomplete
-fpath=( /Users/declan/dev/git_repos_to_maintain/hypers_new/.venv/lib/python3.12/site-packages/argcomplete/bash_completion.d "${fpath[@]}" )
-# End added by argcomplete
+# argcomplete - project-specific paths should be added locally, not in dotfiles
 
 # Begin added by argcomplete
 fpath=( /opt/homebrew/share/zsh/site-functions "${fpath[@]}" )

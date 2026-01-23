@@ -84,7 +84,7 @@ bindkey '^[[1;3C' forward-word
 
 
 # bun completions
-[ -s "/Users/declan/.bun/_bun" ] && source "/Users/declan/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -95,4 +95,4 @@ export OLLAMA_CONTEXT_LENGTH=40000
 # HACK
 export OLLAMA_CONTEXT_LENGTH=40000
 
-alias claude-mem='bun "/Users/declan/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+alias claude-mem='bun "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'

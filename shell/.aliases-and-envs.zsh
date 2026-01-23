@@ -95,7 +95,7 @@ get_filtered_pids() {
 
 alias ht='htop -t -u "$(whoami)" -p "$(get_filtered_pids)"'
 
-alias archive-agent='/Users/declan/dev/archive-agent/Archive-Agent/archive-agent.sh'
+alias archive-agent='$HOME/dev/archive-agent/Archive-Agent/archive-agent.sh'
 alias cc='claude'
 alias ccc='claude --continue'
 alias upd='update-packages'
