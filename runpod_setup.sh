@@ -119,6 +119,15 @@ if [ -n "$GITHUB_TOKEN" ]; then
     echo "✓ Configured GitHub token for git operations"
 fi
 
+# Ngrok token (for tunnel access)
+if [ -n "$NGROK_TOKEN" ]; then
+    # Add to local env as NGROK_AUTH_TOKEN (pyngrok expects this name)
+    if ! grep -q "export NGROK_AUTH_TOKEN" "$LOCAL_ENV_FILE" 2>/dev/null; then
+        echo "export NGROK_AUTH_TOKEN='$NGROK_TOKEN'" >> "$LOCAL_ENV_FILE"
+    fi
+    echo "✓ Configured ngrok auth token"
+fi
+
 # Run setup.sh from zsh with --minimal flag, mark as bootstrapped, and stay in zsh
 cd "$DOTFILES_DIR"
 exec zsh -c "./setup.sh --minimal && touch '$BOOTSTRAP_MARKER' && echo '' && echo '✓ RunPod setup complete! Starting zsh...'"
