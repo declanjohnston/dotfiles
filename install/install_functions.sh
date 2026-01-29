@@ -508,12 +508,12 @@ install_claude_code_cli() {
 configure_claude_mcp_servers() {
     # Configure MCP servers for Claude Code
     # This should run after Claude is installed
-    
+
     if ! command -v claude &> /dev/null; then
         gum_warning "Claude not installed, skipping MCP configuration"
         return
     fi
-    
+
     # Add context7 MCP server globally (remote, no API key required)
     if ! claude mcp list --scope user 2>/dev/null | grep -q "context7"; then
         gum_info "Adding context7 MCP server..."
@@ -522,6 +522,44 @@ configure_claude_mcp_servers() {
     else
         gum_dim "context7 MCP server already configured"
     fi
+}
+
+install_claude_plugin_marketplaces() {
+    local marketplaces_dir="$HOME/.claude/plugins/marketplaces"
+    mkdir -p "$marketplaces_dir"
+
+    # Define marketplaces: name|repo
+    local -a marketplaces=(
+        "claude-plugins-official|anthropics/claude-plugins-official"
+        "superpowers-marketplace|obra/superpowers-marketplace"
+        "thedotmack|thedotmack/claude-mem"
+    )
+
+    gum_info "Installing Claude plugin marketplaces..."
+
+    for entry in "${marketplaces[@]}"; do
+        local name="${entry%%|*}"
+        local repo="${entry#*|}"
+        local target_dir="$marketplaces_dir/$name"
+
+        if [ -d "$target_dir" ]; then
+            gum_dim "  $name already installed, pulling latest..."
+            git -C "$target_dir" pull --quiet 2>/dev/null || gum_warning "  Failed to update $name"
+        else
+            gum_info "  Cloning $name..."
+            git clone --depth 1 "https://github.com/$repo.git" "$target_dir" 2>/dev/null
+            if [ $? -eq 0 ]; then
+                gum_success "  $name installed"
+            else
+                gum_warning "  Failed to clone $name"
+            fi
+        fi
+    done
+
+    # Generate known_marketplaces.json from template
+    generate_plugin_configs
+
+    gum_success "Claude plugin marketplaces installed"
 }
 
 install_chafa() {

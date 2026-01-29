@@ -142,6 +142,9 @@ fi
 # Configure Claude MCP servers (runs after Claude is installed in either mode)
 configure_claude_mcp_servers
 
+# Install Claude plugin marketplaces (clones repos into ~/.claude/plugins/marketplaces)
+install_claude_plugin_marketplaces
+
 if [[ "$MINIMAL_INSTALL" == true ]]; then
     gum_box_success "✓ Minimal setup completed! (~5-10 min)\n\nInstalled: zsh, tmux, fzf, rg, fd, bat, jq, yq, eza, uv, uvx tools, claude\nSkipped: Helix, Cargo/Rust, Go, Node/npm, LSPs (Cursor has these)\n\nReady for Cursor development!"
 else
