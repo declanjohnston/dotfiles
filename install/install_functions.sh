@@ -505,25 +505,6 @@ install_claude_code_cli() {
     curl -fsSL https://claude.ai/install.sh | bash
 }
 
-configure_claude_mcp_servers() {
-    # Configure MCP servers for Claude Code
-    # This should run after Claude is installed
-
-    if ! command -v claude &> /dev/null; then
-        gum_warning "Claude not installed, skipping MCP configuration"
-        return
-    fi
-
-    # Add context7 MCP server globally (remote, no API key required)
-    if ! claude mcp list --scope user 2>/dev/null | grep -q "context7"; then
-        gum_info "Adding context7 MCP server..."
-        claude mcp add --scope user --transport http context7 https://mcp.context7.com/mcp
-        gum_success "context7 MCP server configured"
-    else
-        gum_dim "context7 MCP server already configured"
-    fi
-}
-
 install_claude_plugin_marketplaces() {
     local marketplaces_dir="$HOME/.claude/plugins/marketplaces"
     mkdir -p "$marketplaces_dir"

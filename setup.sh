@@ -139,9 +139,6 @@ else
     update_helix_grammars
 fi
 
-# Configure Claude MCP servers (runs after Claude is installed in either mode)
-configure_claude_mcp_servers
-
 # Install Claude plugin marketplaces (clones repos into ~/.claude/plugins/marketplaces)
 install_claude_plugin_marketplaces
 

@@ -30,7 +30,7 @@
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true,
     "claude-mem@thedotmack": false,
-    "context7@claude-plugins-official": false,
+    "context7@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": false,
     "pyright-lsp@claude-plugins-official": false,
     "typescript-lsp@claude-plugins-official": false,
