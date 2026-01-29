@@ -232,6 +232,7 @@ install_dotfiles() {
         "$dotfiles/maintained_global_claude/skills:$home/.claude/skills"
         "$dotfiles/maintained_global_claude/plugins:$home/.claude/plugins"
         "$dotfiles/maintained_global_claude/settings.json:$home/.claude/settings.json"
+        "$dotfiles/maintained_global_claude/statusline.sh:$home/.claude/statusline.sh"
         "$dotfiles/maintained_global_claude/CLAUDE.md:$home/.claude/CLAUDE.md"
 
         # codex config
@@ -913,4 +914,22 @@ install_codex() {
     gum_info "Installing OpenAI Codex CLI..."
     npm install -g @openai/codex
     gum_success "Codex installed successfully."
+}
+
+install_vivid() {
+    if [[ "$OS_TYPE" == "linux" ]]; then
+        local version="0.10.1"
+        local url="https://github.com/sharkdp/vivid/releases/download/v${version}/vivid-v${version}-x86_64-unknown-linux-musl.tar.gz"
+        local temp_dir="/tmp/vivid_install_$$"
+        mkdir -p "$temp_dir"
+        curl -L "$url" | tar -xz -C "$temp_dir"
+        mkdir -p "$HOME/.local/bin"
+        cp "$temp_dir/vivid-v${version}-x86_64-unknown-linux-musl/vivid" "$HOME/.local/bin/"
+        chmod +x "$HOME/.local/bin/vivid"
+        rm -rf "$temp_dir"
+        export PATH="$HOME/.local/bin:$PATH"
+    elif [[ "$OS_TYPE" == "mac" ]]; then
+        brew install vivid
+    fi
+    gum_success "vivid installed successfully."
 }

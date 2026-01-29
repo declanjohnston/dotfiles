@@ -63,6 +63,7 @@ if [[ "$MINIMAL_INSTALL" == true ]]; then
     install_if_missing unzip install_unzip # Unzip utility required for various installations
     install_if_missing eza install_eza # Modern replacement for ls with color and git integration
     install_if_missing fzf install_fzf # Command-line fuzzy finder for files, history, and more
+    install_if_missing vivid install_vivid # LS_COLORS generator with Catppuccin theme support
     install_if_missing uv install_uv # Python package manager (must be before uvx_tools)
     install_if_missing bat install_bat # Syntax highlighting cat replacement
     install_if_missing rg install_rg # Fast recursive grep alternative
@@ -93,6 +94,7 @@ else
     install_if_missing bfs install_bfs # Breadth-first search for filesystem traversal
     install_if_missing eza install_eza # Modern replacement for ls with color and git integration
     install_if_missing fzf install_fzf # Command-line fuzzy finder for files, history, and more
+    install_if_missing vivid install_vivid # LS_COLORS generator with Catppuccin theme support
     install_if_missing cargo install_cargo # Rust package manager and build system
     install_if_missing uv install_uv # Python package manager (must be before uvx_tools)
     install_if_missing tldr install_tealdeer # Simplified and community-driven man pages
