@@ -77,11 +77,9 @@ install_dotfiles() {
     local bin="$HOME/bin"
     local home="$HOME"
 
-    # Ensure Dracula tmux plugin directory exists so we can symlink our custom scripts into it.
-    # We ensure TPM exists first since `install_plugins` lives under it.
+    # Ensure TPM and tmux plugins are installed
     local tpm_dir="$HOME/.tmux/plugins/tpm"
-    local dracula_plugin="$HOME/.tmux/plugins/tmux"
-    local tmux_scripts="$dracula_plugin/scripts"
+    local catppuccin_plugin="$HOME/.tmux/plugins/tmux"
 
     # Targets we always want to match the repo source (delete existing non-matching
     # file/dir and re-symlink). This keeps setup idempotent for Claude/Codex config.
@@ -107,12 +105,13 @@ install_dotfiles() {
         install_tpm
     fi
 
-    if [ ! -d "$dracula_plugin" ]; then
-        gum_info "Installing tmux plugins (including Dracula theme)..."
-        "$tpm_dir/bin/install_plugins" || gum_warning "TPM plugin install failed (may need manual 'prefix + I' in tmux)"
+    if [ ! -d "$catppuccin_plugin" ]; then
+        gum_info "Installing Catppuccin tmux theme..."
+        install_catppuccin_tmux
     fi
 
-    mkdir -p "$tmux_scripts"
+    # Install remaining tmux plugins via TPM
+    "$tpm_dir/bin/install_plugins"
 
     array_contains() {
         local needle="$1"
@@ -127,9 +126,6 @@ install_dotfiles() {
 
     should_force_link() {
         local target="$1"
-        if [[ "$target" == "$tmux_scripts/"* ]]; then
-            return 0
-        fi
         if array_contains "$target" "${force_replace_targets[@]}"; then
             return 0
         fi
@@ -187,11 +183,6 @@ install_dotfiles() {
         # editor dotfiles
         "$dotfiles/tmux/.tmux.conf:$home/.tmux.conf"
         "$dotfiles/editors/.vimrc:$home/.vimrc"
-
-        # tmux scripts (Dracula plugin)
-        "$dotfiles/tmux/scripts/dracula.sh:$tmux_scripts/dracula.sh"
-        "$dotfiles/tmux/scripts/pm2_status.sh:$tmux_scripts/pm2_status.sh"
-        "$dotfiles/tmux/scripts/pm2_status_wrapper.sh:$tmux_scripts/pm2_status_wrapper.sh"
 
         # linters dotfiles
         "$dotfiles/linters/.pylintrc:$home/.pylintrc"
@@ -266,12 +257,6 @@ install_dotfiles() {
             chmod +x "$source"
         fi
     done
-
-    if [ -d "$dracula_plugin" ]; then
-        gum_dim "Custom tmux scripts symlinked successfully."
-    else
-        gum_warning "Dracula tmux plugin directory not found at $dracula_plugin; skipping custom tmux script symlinks."
-    fi
 
 if [ -d "$HOME/.cursor" ]; then
     ln -sf "$HOME/.cursor" "$HOME/.cursor-server"
@@ -705,6 +690,23 @@ install_hypers() {
 install_tpm() {
     git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
     gum_success "tmux plugin manager installed successfully."
+}
+
+install_catppuccin_tmux() {
+    local catppuccin_dir="$HOME/.tmux/plugins/tmux"
+
+    # Remove existing plugin if it's not catppuccin (e.g., dracula)
+    if [ -d "$catppuccin_dir" ] && [ ! -f "$catppuccin_dir/catppuccin.tmux" ]; then
+        gum_warning "Removing existing non-Catppuccin tmux theme..."
+        rm -rf "$catppuccin_dir"
+    fi
+
+    if [ ! -d "$catppuccin_dir" ]; then
+        git clone -b v2.1.3 https://github.com/catppuccin/tmux.git "$catppuccin_dir"
+        gum_success "Catppuccin tmux theme installed successfully."
+    else
+        gum_dim "Catppuccin tmux theme is already installed."
+    fi
 }
 
 install_git_fuzzy() {
