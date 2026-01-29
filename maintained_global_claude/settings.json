@@ -22,6 +22,7 @@
     ],
     "deny": []
   },
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "zsh ~/.claude/statusline.sh"
@@ -40,10 +41,10 @@
     "ralph-wiggum@claude-plugins-official": false,
     "ralph-wiggum@claude-code-plugins": false,
     "commit-commands@claude-plugins-official": false,
-    "claude-mem@thedotmack": false
+    "claude-mem@thedotmack": false,
+    "superpowers@superpowers-marketplace": true
   },
   "feedbackSurveyState": {
     "lastShownTime": 1754286002006
-  },
-  "model": "opus"
+  }
 }
