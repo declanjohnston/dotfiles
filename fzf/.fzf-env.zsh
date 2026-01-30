@@ -74,11 +74,6 @@ export FZF_DEFAULT_OPTS=" \
     --bind 'focus:transform-preview-label:[[ -n {} ]] && printf \" Previewing [%s] \" {}' \
     --bind 'focus:+transform-header:file --brief {} || echo \"No file selected\"' \
     --bind 'ctrl-r:change-list-label( Reloading the list )+reload(sleep 2; git ls-files)' \
-    --color 'border:#aaaaaa,label:#cccccc' \
-    --color 'preview-border:#9999cc,preview-label:#ccccff' \
-    --color 'list-border:#669966,list-label:#99cc99' \
-    --color 'input-border:#996666,input-label:#ffcccc' \
-    --color 'header-border:#6699cc,header-label:#99ccff'
     --bind 'ctrl-/:change-preview-window(down|hidden|)' \
     --bind 'ctrl-d:preview-half-page-down' \
     --bind 'ctrl-u:preview-half-page-up' \
@@ -151,3 +146,6 @@ export FZF_CTRL_R_OPTS="
   --bind 'ctrl-v:execute(echo {2..} | view - > /dev/tty)' \
   --bind 'ctrl-t:track+clear-query' \
   --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'"
+
+# Apply Catppuccin colors (FZF_CATPPUCCIN_COLORS is set by shell-colors.sh)
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CATPPUCCIN_COLORS"

@@ -1,4 +1,4 @@
-# Config for Powerlevel10k with rainbow (Catppuccin Macchiato) prompt style.
+# Config for Powerlevel10k with rainbow (Catppuccin Mocha Custom) prompt style.
 #
 
 # Temporarily change options.
@@ -18,44 +18,8 @@
   # Zsh >= 5.1 is required.
   [[ $ZSH_VERSION == (5.<1->*|<6->.*) ]] || return
 
-  # Catppuccin Macchiato Palette for Powerlevel10k
-  # This file defines the color palette used for the Mocha theme.
-  
-  # Core colors
-  typeset -g P10K_COLOR_BASE="#24273a"   # Base
-  typeset -g P10K_COLOR_MANTLE="#1e2030" # Mantle
-  typeset -g P10K_COLOR_CRUST="#181926"  # Crust
-  
-  # Text and Subtext
-  typeset -g P10K_COLOR_TEXT="#cad3f5"     # Text
-  typeset -g P10K_COLOR_SUBTEXT1="#b8c0e0" # Subtext 1
-  typeset -g P10K_COLOR_SUBTEXT0="#a5adcb" # Subtext 0
-  
-  # Overlays
-  typeset -g P10K_COLOR_OVERLAY2="#939ab7" # Overlay 2
-  typeset -g P10K_COLOR_OVERLAY1="#8087a2" # Overlay 1
-  typeset -g P10K_COLOR_OVERLAY0="#6e738d" # Overlay 0
-  
-  # Surfaces
-  typeset -g P10K_COLOR_SURFACE2="#5b6078" # Surface 2
-  typeset -g P10K_COLOR_SURFACE1="#494d64" # Surface 1
-  typeset -g P10K_COLOR_SURFACE0="#363a4f" # Surface 0
-  
-  # Accent colors
-  typeset -g P10K_COLOR_BLUE="#8aadf4"      # Blue
-  typeset -g P10K_COLOR_LAVENDER="#b7bdf8"  # Lavender
-  typeset -g P10K_COLOR_SAPPHIRE="#7dc4e4"  # Sapphire
-  typeset -g P10K_COLOR_SKY="#91d7e3"       # Sky
-  typeset -g P10K_COLOR_TEAL="#8bd5ca"      # Teal
-  typeset -g P10K_COLOR_GREEN="#a6da95"     # Green
-  typeset -g P10K_COLOR_YELLOW="#eed49f"    # Yellow
-  typeset -g P10K_COLOR_PEACH="#f5a97f"     # Peach
-  typeset -g P10K_COLOR_RED="#ed8796"       # Red
-  typeset -g P10K_COLOR_MAROON="#ee99a0"    # Maroon
-  typeset -g P10K_COLOR_PINK="#f5bde6"      # Pink
-  typeset -g P10K_COLOR_FLAMINGO="#f0c6c6"  # Flamingo
-  typeset -g P10K_COLOR_ROSEWATER="#f4dbd6" # Rosewater
-  typeset -g P10K_COLOR_MAUVE="#c6a0f6"     # Mauve
+  # Catppuccin Mocha (Custom) Palette - sourced from generated file
+  source ~/dotfiles/theme/generated/p10k-colors.zsh
 
   # The list of segments shown on the left. Fill it with the most important segments.
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(

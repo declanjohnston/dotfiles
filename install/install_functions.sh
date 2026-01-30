@@ -259,6 +259,14 @@ install_dotfiles() {
         fi
     done
 
+    # iTerm Dynamic Profile (macOS only)
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        local iterm_profiles="$HOME/Library/Application Support/iTerm2/DynamicProfiles"
+        mkdir -p "$iterm_profiles"
+        ln -sf "$dotfiles/theme/generated/iterm-profile.json" "$iterm_profiles/catppuccin-mocha-custom.json"
+        gum_dim "iTerm profile symlinked to DynamicProfiles"
+    fi
+
 if [ -d "$HOME/.cursor" ]; then
     ln -sf "$HOME/.cursor" "$HOME/.cursor-server"
     gum_dim "Symlink created from ~/.cursor to ~/.cursor-server"
@@ -951,4 +959,18 @@ install_vivid() {
         brew install vivid
     fi
     gum_success "vivid installed successfully."
+}
+
+merge_cursor_colors() {
+    local cursor_settings="$HOME/Library/Application Support/Cursor/User/settings.json"
+    local overrides="$HOME/dotfiles/theme/generated/cursor-overrides.json"
+
+    if [[ -f "$cursor_settings" ]] && [[ -f "$overrides" ]]; then
+        gum_info "Merging Catppuccin colors into Cursor settings..."
+        local tmp_file="${cursor_settings}.tmp"
+        jq -s '.[0] * .[1]' "$cursor_settings" "$overrides" > "$tmp_file" && mv "$tmp_file" "$cursor_settings"
+        gum_success "Cursor colors updated"
+    else
+        gum_dim "Cursor not installed or overrides not generated - skipping color merge"
+    fi
 }

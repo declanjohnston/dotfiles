@@ -39,6 +39,7 @@ export ZSH_DISABLE_COMPFIX="true"
 # Source Core Configuration Files
 source ~/helper_functions.sh
 source ~/gum_utils.sh
+source ~/dotfiles/theme/generated/shell-colors.sh
 source ~/lscolors.sh
 source ~/.aliases-and-envs.zsh
 source ~/.local_env.sh  # Should contain API keys and local-specific settings

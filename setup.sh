@@ -28,6 +28,10 @@ source "./install/install_functions.sh"
 source "./shell/.aliases-and-envs.zsh"
 source "./shell/gum_utils.sh"
 
+# Generate theme files before other setup
+gum_info "Generating theme files..."
+"$HOME/dotfiles/theme/generate-theme.sh"
+
 # install zsh (must happen first, before other tools)
 install_if_missing zsh install_zsh
 
@@ -141,6 +145,9 @@ fi
 
 # Install Claude plugin marketplaces (clones repos into ~/.claude/plugins/marketplaces)
 install_claude_plugin_marketplaces
+
+# Merge Cursor color overrides (if Cursor is installed)
+merge_cursor_colors
 
 if [[ "$MINIMAL_INSTALL" == true ]]; then
     gum_box_success "✓ Minimal setup completed! (~5-10 min)\n\nInstalled: zsh, tmux, fzf, rg, fd, bat, jq, yq, eza, uv, uvx tools, claude\nSkipped: Helix, Cargo/Rust, Go, Node/npm, LSPs (Cursor has these)\n\nReady for Cursor development!"

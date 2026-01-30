@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+source ~/dotfiles/theme/generated/shell-colors.sh
 # Battery pill for tmux status bar
 # Outputs full tmux-formatted pill with dynamic color and icon based on charge level
 # Colors use Catppuccin Macchiato palette, gradient from green (full) → red (empty)
 
-BASE="#24273a"
-CRUST="#181926"
+BASE="$CATPPUCCIN_BASE"
+CRUST="$CATPPUCCIN_CRUST"
 
 get_battery_percent() {
     case $(uname -s) in
@@ -43,11 +44,11 @@ is_charging() {
 
 get_color() {
     local pct=$1
-    if   (( pct >= 80 )); then echo "#a6da95"  # green
-    elif (( pct >= 60 )); then echo "#eed49f"  # yellow
-    elif (( pct >= 40 )); then echo "#f5a97f"  # peach
-    elif (( pct >= 20 )); then echo "#ed8796"  # red
-    else                       echo "#ee99a0"  # maroon
+    if   (( pct >= 80 )); then echo "$CATPPUCCIN_GREEN"
+    elif (( pct >= 60 )); then echo "$CATPPUCCIN_YELLOW"
+    elif (( pct >= 40 )); then echo "$CATPPUCCIN_PEACH"
+    elif (( pct >= 20 )); then echo "$CATPPUCCIN_RED"
+    else                       echo "$CATPPUCCIN_MAROON"
     fi
 }
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+source ~/dotfiles/theme/generated/shell-colors.sh
 # Per-session status bar customization for agents session
 
 session_name=$(tmux display-message -p '#S')
@@ -6,17 +7,17 @@ session_name=$(tmux display-message -p '#S')
 if [[ "$session_name" == "agents" ]]; then
     dir="$HOME/dotfiles/tmux/scripts"
 
-    base="#24273a"
-    crust="#181926"
-    peach="#f5a97f"
-    yellow="#eed49f"
+    base="$CATPPUCCIN_BASE"
+    crust="$CATPPUCCIN_CRUST"
+    peach="$CATPPUCCIN_PEACH"
+    yellow="$CATPPUCCIN_YELLOW"
     left_cap=""
     right_cap=""
 
     # Enable pane borders with titles for agents session
     tmux set-option pane-border-status top
 
-    tmux set-option status-style "bg=$base,fg=#cad3f5"
+    tmux set-option status-style "bg=$base,fg=$CATPPUCCIN_TEXT"
     tmux set-option status-justify centre
     tmux set-option status-left-length 30
     tmux set-option status-right-length 200
@@ -31,7 +32,7 @@ if [[ "$session_name" == "agents" ]]; then
     tmux set-option status-right "#($dir/agents_status_vscode.sh)"
 
     # Window list: non-current windows muted
-    tmux set-option window-status-format "#[fg=#5b6078] #W "
+    tmux set-option window-status-format "#[fg=$CATPPUCCIN_SURFACE2] #W "
     
     # Current window: Orange pill with icon, window name + agent count (bold)
     tmux set-option window-status-current-format "\
