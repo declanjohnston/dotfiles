@@ -28,8 +28,9 @@ source "./install/install_functions.sh"
 source "./shell/.aliases-and-envs.zsh"
 source "./shell/gum_utils.sh"
 
-# Install jq early (required by generate-theme.sh)
+# Install jq and bc early (required by generate-theme.sh)
 install_if_missing jq install_jq
+install_if_missing bc install_bc
 
 # Generate theme files before other setup
 gum_info "Generating theme files..."

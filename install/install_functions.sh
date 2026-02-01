@@ -661,6 +661,16 @@ install_jq() {
     gum_success "jq installed successfully."
 }
 
+install_bc() {
+    if [[ "$OS_TYPE" == "linux" ]]; then
+        sudo apt install -y bc
+    elif [[ "$OS_TYPE" == "mac" ]]; then
+        # bc is pre-installed on macOS
+        :
+    fi
+    gum_success "bc installed successfully."
+}
+
 install_pq() {
     mkdir -p "$HOME/bin"
     if [[ "$OS_TYPE" == "linux" ]]; then
