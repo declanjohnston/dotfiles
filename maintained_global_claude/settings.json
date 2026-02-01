@@ -18,7 +18,8 @@
       "Write",
       "Edit",
       "Bash(chmod:*)",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(echo:*)"
     ],
     "deny": []
   },
