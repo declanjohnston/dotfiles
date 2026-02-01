@@ -125,6 +125,7 @@ else
     install_if_missing uwu-cli install_uwu # uwu-cli for terminal UI
     install_if_missing codex install_codex # OpenAI Codex CLI
     # install_if_missing watchexec install_cargo_tools # Watchexec CLI for file watching
+
     
     # install tools that depend on uv (must be after uv installation)
     install_if_missing rich install_rich_cli # Rich CLI for terminal output
@@ -145,8 +146,9 @@ else
     update_helix_grammars
 fi
 
-# Install Claude plugin marketplaces (clones repos into ~/.claude/plugins/marketplaces)
+# Claude plugins (runs for both full and minimal modes)
 install_claude_plugin_marketplaces
+install_voicemode  # Speech-to-text, run /voicemode:install inside Claude after
 
 # Merge Cursor color overrides (if Cursor is installed)
 merge_cursor_colors

@@ -35,7 +35,8 @@
     "pyright-lsp@claude-plugins-official": false,
     "typescript-lsp@claude-plugins-official": false,
     "rust-analyzer-lsp@claude-plugins-official": false,
-    "frontend-design@claude-plugins-official": false
+    "frontend-design@claude-plugins-official": false,
+    "voicemode@mbailey": true
   },
   "feedbackSurveyState": {
     "lastShownTime": 1754286002006

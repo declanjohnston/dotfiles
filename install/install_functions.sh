@@ -514,39 +514,35 @@ install_claude_code_cli() {
 }
 
 install_claude_plugin_marketplaces() {
-    local marketplaces_dir="$HOME/.claude/plugins/marketplaces"
-    mkdir -p "$marketplaces_dir"
-
     # Define marketplaces: name|repo
     local -a marketplaces=(
         "claude-plugins-official|anthropics/claude-plugins-official"
         "superpowers-marketplace|obra/superpowers-marketplace"
         "thedotmack|thedotmack/claude-mem"
+        "mbailey|mbailey/plugins"
     )
 
     gum_info "Installing Claude plugin marketplaces..."
 
+    # Get currently installed marketplaces
+    local installed
+    installed=$(claude plugin marketplace list 2>/dev/null || echo "")
+
     for entry in "${marketplaces[@]}"; do
         local name="${entry%%|*}"
         local repo="${entry#*|}"
-        local target_dir="$marketplaces_dir/$name"
 
-        if [ -d "$target_dir" ]; then
-            gum_dim "  $name already installed, pulling latest..."
-            git -C "$target_dir" pull --quiet 2>/dev/null || gum_warning "  Failed to update $name"
+        if echo "$installed" | grep -q "$name"; then
+            gum_dim "  $name already installed"
         else
-            gum_info "  Cloning $name..."
-            git clone --depth 1 "https://github.com/$repo.git" "$target_dir" 2>/dev/null
-            if [ $? -eq 0 ]; then
-                gum_success "  $name installed"
+            gum_info "  Adding $name..."
+            if claude plugin marketplace add "$repo" 2>/dev/null; then
+                gum_success "  $name added"
             else
-                gum_warning "  Failed to clone $name"
+                gum_warning "  Failed to add $name"
             fi
         fi
     done
-
-    # Generate known_marketplaces.json from template
-    generate_plugin_configs
 
     gum_success "Claude plugin marketplaces installed"
 }
@@ -954,6 +950,37 @@ install_codex() {
     gum_info "Installing OpenAI Codex CLI..."
     npm install -g @openai/codex
     gum_success "Codex installed successfully."
+}
+
+install_voicemode() {
+    gum_info "Installing VoiceMode (speech-to-text for Claude Code)..."
+
+    # Install the Claude Code plugin (marketplace must be added first via install_claude_plugin_marketplaces)
+    claude plugin install voicemode@mbailey
+
+    # On macOS, install local Whisper for speech-to-text
+    if [[ "$OS_TYPE" == "mac" ]]; then
+        # Install VoiceMode CLI and dependencies
+        if ! command_exists voicemode; then
+            gum_info "Installing VoiceMode CLI..."
+            uvx voice-mode-install --yes
+        fi
+
+        # Install and enable Whisper service (speech-to-text)
+        if command_exists voicemode; then
+            if [[ ! -d "$HOME/.voicemode/services/whisper" ]]; then
+                gum_info "Installing Whisper service..."
+                voicemode service install whisper
+            fi
+            # Enable Whisper to start at login
+            gum_info "Enabling Whisper to start at login..."
+            voicemode service enable whisper
+            voicemode service start whisper
+        fi
+    fi
+
+    gum_success "VoiceMode installed."
+    gum_info "Use /voice-input in Claude Code for speech-to-text"
 }
 
 install_vivid() {
