@@ -164,7 +164,7 @@ cat > "$OUTPUT_DIR/iterm-profile.json.tmp" << HEADER
       "Guid": "catppuccin-mocha-generated",
       "Dynamic Profile Parent Name": "Default",
       "Draw Powerline Glyphs": true,
-      "Background Color": $(hex_to_iterm_rgb "$base"),
+      "Background Color": $(hex_to_iterm_rgb "$mantle"),
       "Foreground Color": $(hex_to_iterm_rgb "$text"),
       "Cursor Color": $(hex_to_iterm_rgb "$rosewater"),
       "Cursor Text Color": $(hex_to_iterm_rgb "$crust"),
