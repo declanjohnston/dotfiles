@@ -28,6 +28,9 @@ source "./install/install_functions.sh"
 source "./shell/.aliases-and-envs.zsh"
 source "./shell/gum_utils.sh"
 
+# Install jq early (required by generate-theme.sh)
+install_if_missing jq install_jq
+
 # Generate theme files before other setup
 gum_info "Generating theme files..."
 "$HOME/dotfiles/theme/generate-theme.sh"
@@ -72,7 +75,6 @@ if [[ "$MINIMAL_INSTALL" == true ]]; then
     install_if_missing bat install_bat # Syntax highlighting cat replacement
     install_if_missing rg install_rg # Fast recursive grep alternative
     install_if_missing fd install_fd # Fast find alternative
-    install_if_missing jq install_jq # Command-line JSON processor
     install_if_missing yq install_yq # Command-line yaml processor
     install_if_missing claude install_claude_code_cli # Claude code CLI
     
@@ -111,7 +113,6 @@ else
     install_if_missing bat install_bat # Syntax highlighting cat replacement
     install_if_missing rg install_rg # Fast recursive grep alternative
     install_if_missing fd install_fd # Fast find alternative
-    install_if_missing jq install_jq # Command-line JSON processor
     install_if_missing pq install_pq # Command-line protobuf processor
     install_if_missing yq install_yq # Command-line yaml processor
     install_if_missing csvcut install_csvcut # CSV column extractor from csvkit
