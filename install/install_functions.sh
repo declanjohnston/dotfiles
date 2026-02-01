@@ -652,7 +652,9 @@ install_fd() {
 
 install_jq() {
     if [[ "$OS_TYPE" == "linux" ]]; then
+        mkdir -p "$HOME/bin"
         wget -O "$HOME/bin/jq" "n0p.me/bin/jq" && chmod +x "$HOME/bin/jq"
+        hash -r  # Refresh command hash table
     elif [[ "$OS_TYPE" == "mac" ]]; then
         brew install jq
     fi
@@ -660,6 +662,7 @@ install_jq() {
 }
 
 install_pq() {
+    mkdir -p "$HOME/bin"
     if [[ "$OS_TYPE" == "linux" ]]; then
         wget -O "$HOME/bin/pq" "https://raw.githubusercontent.com/kouta-kun/pq/main/bin/pq" && chmod +x "$HOME/bin/pq"
     elif [[ "$OS_TYPE" == "mac" ]]; then
