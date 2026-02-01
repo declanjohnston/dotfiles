@@ -958,29 +958,23 @@ install_voicemode() {
     # Install the Claude Code plugin (marketplace must be added first via install_claude_plugin_marketplaces)
     claude plugin install voicemode@mbailey
 
-    # On macOS, install local Whisper for speech-to-text
-    if [[ "$OS_TYPE" == "mac" ]]; then
-        # Install VoiceMode CLI and dependencies
-        if ! command_exists voicemode; then
-            gum_info "Installing VoiceMode CLI..."
-            uvx voice-mode-install --yes
-        fi
-
-        # Install and enable Whisper service (speech-to-text)
-        if command_exists voicemode; then
-            if [[ ! -d "$HOME/.voicemode/services/whisper" ]]; then
-                gum_info "Installing Whisper service..."
-                voicemode service install whisper
-            fi
-            # Enable Whisper to start at login
-            gum_info "Enabling Whisper to start at login..."
-            voicemode service enable whisper
-            voicemode service start whisper
-        fi
+    # Install VoiceMode CLI (no local services - cloud API only)
+    if ! command_exists voicemode; then
+        gum_info "Installing VoiceMode CLI..."
+        uvx voice-mode-install --yes
     fi
 
-    gum_success "VoiceMode installed."
+    # Configure to use OpenAI cloud API only (no local fallback)
+    if command_exists voicemode; then
+        gum_info "Configuring VoiceMode for cloud-only (OpenAI API)..."
+        voicemode config set VOICEMODE_STT_BASE_URLS "https://api.openai.com/v1"
+        voicemode config set VOICEMODE_TTS_BASE_URLS "https://api.openai.com/v1"
+        voicemode config set VOICEMODE_PREFER_LOCAL "false"
+    fi
+
+    gum_success "VoiceMode installed (cloud-only mode)."
     gum_info "Use /voice-input in Claude Code for speech-to-text"
+    gum_warning "Requires OPENAI_API_KEY in ~/.local_env.sh"
 }
 
 install_vivid() {
