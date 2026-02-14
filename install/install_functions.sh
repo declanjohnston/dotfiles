@@ -887,6 +887,11 @@ install_ty() {
     uv tool install ty@latest
 }
 
+install_yt_dlp() {
+    uv tool install yt-dlp
+    gum_success "yt-dlp installed successfully."
+}
+
 install_cargo_tools() {
     cargo install --locked watchexec-cli
     gum_success "watchexec-cli installed successfully."

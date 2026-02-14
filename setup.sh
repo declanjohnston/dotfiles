@@ -84,7 +84,8 @@ if [[ "$MINIMAL_INSTALL" == true ]]; then
     install_if_missing markitdown install_markitdown # Markdown converter via uv
     install_if_missing vd install_visidata # Terminal data viewer via uv
     install_if_missing ty install_ty # Ty CLI tool via uv
-    
+    install_if_missing yt-dlp install_yt_dlp # YouTube downloader via uv
+
     gum_info "Minimal mode complete - skipped ~50-70 minutes of heavy installs"
 else
     # FULL MODE: Install everything in original order
@@ -132,7 +133,8 @@ else
     install_if_missing markitdown install_markitdown # Markdown converter via uv
     install_if_missing vd install_visidata # Terminal data viewer via uv
     install_if_missing ty install_ty # Ty CLI tool via uv
-    
+    install_if_missing yt-dlp install_yt_dlp # YouTube downloader via uv
+
     # install language servers (must be after npm and cargo installation)
     install_if_missing shellcheck install_shellcheck # Shell script linter
     install_if_missing bash-language-server install_bash_language_server # Bash LSP for editor integration
