@@ -493,6 +493,14 @@ install_btop() {
     gum_success "btop installed successfully."
 }
 
+install_mactop() {
+    if [[ "$OS_TYPE" == "mac" ]]; then
+        brew install mactop
+    else
+        gum_dim "mactop is macOS only, skipping on Linux."
+    fi
+}
+
 install_ctop() {
     if [[ "$OS_TYPE" == "linux" ]]; then
         sudo curl -Lo /usr/local/bin/ctop https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64
@@ -997,6 +1005,10 @@ install_voicemode() {
     gum_success "VoiceMode installed (cloud-only mode)."
     gum_info "Use /voice-input in Claude Code for speech-to-text"
     gum_warning "Requires OPENAI_API_KEY in ~/.local_env.sh"
+}
+
+install_typst() {
+    install_on_brew_or_mac "typst" "typst"
 }
 
 install_vivid() {

@@ -111,6 +111,7 @@ else
     install_if_missing lazygit install_lazygit # Terminal UI for git commands
     install_if_missing lazydocker install_lazydocker # Terminal UI for managing Docker containers
     install_if_missing btop install_btop # Resource monitor with CPU, memory, disk, network stats
+    install_if_missing mactop install_mactop # macOS-specific system monitor (Apple Silicon)
     install_if_missing ctop install_ctop # Container metrics and monitoring
     install_if_missing bat install_bat # Syntax highlighting cat replacement
     install_if_missing rg install_rg # Fast recursive grep alternative
@@ -125,6 +126,7 @@ else
     install_if_missing xsel install_xsel # Alternative clipboard utility for tmux
     install_if_missing uwu-cli install_uwu # uwu-cli for terminal UI
     install_if_missing codex install_codex # OpenAI Codex CLI
+    install_if_missing typst install_typst # Typst typesetting system for document compilation
     # install_if_missing watchexec install_cargo_tools # Watchexec CLI for file watching
 
     
