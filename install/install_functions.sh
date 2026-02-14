@@ -222,6 +222,9 @@ install_dotfiles() {
         # git config
         "$dotfiles/.gitconfig:$home/.gitconfig"
 
+        # yt-dlp
+        "$dotfiles/yt-dlp/config:$home/.config/yt-dlp/config"
+
         # helix
         "$dotfiles/editors/hx_languages.toml:$home/.config/helix/languages.toml"
         "$dotfiles/editors/hx_config.toml:$home/.config/helix/config.toml"
@@ -888,7 +891,7 @@ install_ty() {
 }
 
 install_yt_dlp() {
-    uv tool install yt-dlp
+    uv tool install "yt-dlp[default]"
     gum_success "yt-dlp installed successfully."
 }
 
