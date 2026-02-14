@@ -146,11 +146,8 @@ else
     
     # update helix grammars
     update_helix_grammars
-fi
 
-# macOS-specific setup (runs for both full and minimal modes)
-if [[ ! -f "$HOME/.iterm2_shell_integration.zsh" ]]; then
-    install_iterm2_shell_integration
+    install_iterm2_shell_integration # iTerm2 shell integration (macOS only, skips on Linux)
 fi
 
 # Claude plugins (runs for both full and minimal modes)

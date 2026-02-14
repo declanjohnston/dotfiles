@@ -897,6 +897,10 @@ install_iterm2_shell_integration() {
         gum_dim "iTerm2 shell integration is macOS only, skipping."
         return
     fi
+    if [[ -f "$HOME/.iterm2_shell_integration.zsh" ]]; then
+        gum_dim "iTerm2 shell integration is already installed."
+        return
+    fi
     curl -fsSL https://iterm2.com/shell_integration/zsh -o "$HOME/.iterm2_shell_integration.zsh"
     chmod +x "$HOME/.iterm2_shell_integration.zsh"
     gum_success "iTerm2 shell integration installed successfully."
