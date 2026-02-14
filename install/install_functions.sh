@@ -892,6 +892,16 @@ install_yt_dlp() {
     gum_success "yt-dlp installed successfully."
 }
 
+install_iterm2_shell_integration() {
+    if [[ "$OS_TYPE" != "mac" ]]; then
+        gum_dim "iTerm2 shell integration is macOS only, skipping."
+        return
+    fi
+    curl -fsSL https://iterm2.com/shell_integration/zsh -o "$HOME/.iterm2_shell_integration.zsh"
+    chmod +x "$HOME/.iterm2_shell_integration.zsh"
+    gum_success "iTerm2 shell integration installed successfully."
+}
+
 install_cargo_tools() {
     cargo install --locked watchexec-cli
     gum_success "watchexec-cli installed successfully."

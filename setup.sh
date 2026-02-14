@@ -148,6 +148,11 @@ else
     update_helix_grammars
 fi
 
+# macOS-specific setup (runs for both full and minimal modes)
+if [[ ! -f "$HOME/.iterm2_shell_integration.zsh" ]]; then
+    install_iterm2_shell_integration
+fi
+
 # Claude plugins (runs for both full and minimal modes)
 install_claude_plugin_marketplaces
 install_voicemode  # Speech-to-text, run /voicemode:install inside Claude after
