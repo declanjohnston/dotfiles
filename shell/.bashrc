@@ -152,3 +152,4 @@ echo "hello from bashrc"
 echo "Sourcing $0"
 
 alias claude-mem='bun "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+export PATH="/shared-team-storage/shared-conda/bin:$PATH"

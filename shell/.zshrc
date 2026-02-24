@@ -10,6 +10,10 @@
 
 # Fix for Cursor Agent terminal hangs - skip loading rest of config in Agent mode
 if [[ "$CURSOR_AGENT" == "1" || "$COMPOSER_NO_INTERACTION" == "1" || "$PIP_NO_INPUT" == "true" ]]; then
+  export NVM_DIR="$HOME/.nvm"
+  NVM_NODE="$HOME/.nvm/versions/node/v24.13.1/bin"
+  [[ -d "$NVM_NODE" ]] && export PATH="$NVM_NODE:$HOME/.local/bin:$PATH"
+  source ~/.local_env.sh 2>/dev/null
   return
 fi
 

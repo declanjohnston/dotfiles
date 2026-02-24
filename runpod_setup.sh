@@ -128,6 +128,13 @@ if [ -n "$NGROK_TOKEN" ]; then
     echo "✓ Configured ngrok auth token"
 fi
 
+# Ensure ~/.cache exists and is writable before zsh startup
+mkdir -p "$HOME/.cache"
+if [[ "$(id -u)" -eq 0 && "$HOME" != "/root" ]]; then
+    target_user=$(basename "$HOME")
+    chown -R "$target_user:$target_user" "$HOME/.cache" 2>/dev/null || true
+fi
+
 # Run setup.sh from zsh with --minimal flag, mark as bootstrapped, and stay in zsh
 cd "$DOTFILES_DIR"
 exec zsh -c "./setup.sh --minimal && touch '$BOOTSTRAP_MARKER' && echo '' && echo '✓ RunPod setup complete! Starting zsh...'"

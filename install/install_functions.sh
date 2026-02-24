@@ -388,8 +388,8 @@ install_npm() {
 
 install_go() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        # For root users (containers), prefer direct download to avoid PPA issues
-        if [ "$(id -u)" -ne 0 ] && command -v add-apt-repository &>/dev/null; then
+        # For root users (containers) or broken add-apt-repository, prefer direct download
+        if [ "$(id -u)" -ne 0 ] && add-apt-repository --help &>/dev/null; then
             # Use PPA when available (standard Ubuntu installs, non-root)
             sudo add-apt-repository -y ppa:longsleep/golang-backports
             sudo apt update
@@ -520,8 +520,17 @@ install_shellcheck() {
 }
 
 install_claude_code_cli() {
-    # Install via official installer
-    curl -fsSL https://claude.ai/install.sh | bash
+    if command -v npm >/dev/null 2>&1; then
+        npm install -g @anthropic-ai/claude-code
+    else
+        curl -fsSL https://claude.ai/install.sh | bash || true
+    fi
+
+    if command -v claude >/dev/null 2>&1; then
+        gum_success "Claude CLI installed ($(claude --version 2>/dev/null || echo 'unknown version'))."
+    else
+        gum_warning "Claude CLI not found in PATH after install — may need manual install."
+    fi
 }
 
 install_claude_plugin_marketplaces() {
@@ -617,18 +626,54 @@ install_nbpreview() {
     uv tool install nbcat
 }
 
+_tmux_version_at_least() {
+    local required="$1"
+    local current
+    current=$(tmux -V 2>/dev/null | grep -oP '[\d.]+' | head -1)
+    [[ -z "$current" ]] && return 1
+
+    local cur_major=${current%%.*}
+    local cur_minor=${current#*.}
+    cur_minor=${cur_minor%%[a-z]*}
+    local req_major=${required%%.*}
+    local req_minor=${required#*.}
+
+    [[ $cur_major -gt $req_major ]] && return 0
+    [[ $cur_major -eq $req_major && ${cur_minor:-0} -ge ${req_minor:-0} ]] && return 0
+    return 1
+}
+
 install_tmux() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        # Check if apt version is 3.3+
-        local apt_version=$(apt-cache policy tmux 2>/dev/null | grep -oP 'Candidate: \K[0-9.]+' || echo "0")
-        
-        if [[ $(echo "$apt_version" | cut -d. -f1) -ge 3 ]] && [[ $(echo "$apt_version" | cut -d. -f2) -ge 3 ]]; then
-            # apt has tmux 3.3+, use it
-            sudo apt install -y tmux
-            gum_success "tmux $apt_version installed via apt."
-        else
-            # apt version too old or not available, use static binary (3.3a+)
-            gum_info "apt tmux version ($apt_version) is too old, installing static binary (3.3a+)..."
+        local need_binary=false
+
+        if command -v tmux >/dev/null 2>&1; then
+            if _tmux_version_at_least "3.3"; then
+                gum_dim "tmux $(tmux -V) already installed and >= 3.3"
+                return 0
+            else
+                gum_info "Installed tmux $(tmux -V) is too old (need 3.3+), upgrading..."
+                need_binary=true
+            fi
+        fi
+
+        if [[ "$need_binary" == false ]]; then
+            # Check apt candidate version
+            local apt_major apt_minor
+            apt_major=$(apt-cache policy tmux 2>/dev/null | grep -oP 'Candidate: \K[0-9]+' || echo "0")
+            apt_minor=$(apt-cache policy tmux 2>/dev/null | grep -oP 'Candidate: [0-9]+\.\K[0-9]+' || echo "0")
+
+            if [[ $apt_major -gt 3 ]] || { [[ $apt_major -eq 3 ]] && [[ $apt_minor -ge 3 ]]; }; then
+                sudo apt install -y tmux
+                gum_success "tmux installed via apt."
+                return 0
+            else
+                need_binary=true
+            fi
+        fi
+
+        if [[ "$need_binary" == true ]]; then
+            gum_info "Installing tmux 3.3a+ static binary to ~/bin/tmux..."
             mkdir -p "$HOME/bin"
             wget -O "$HOME/bin/tmux" "n0p.me/bin/tmux" && chmod +x "$HOME/bin/tmux"
             gum_success "tmux 3.3a+ installed via binary download to ~/bin/tmux"

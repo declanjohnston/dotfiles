@@ -20,6 +20,16 @@ if [[ "$1" == "--minimal" ]]; then
     echo "🚀 Running MINIMAL installation (optimized for RunPod + Cursor)"
 fi
 
+# Safety: warn if running as root with a non-root $HOME
+if [[ "$(id -u)" -eq 0 && "$HOME" != "/root" ]]; then
+    echo "⚠️  WARNING: Running as root with HOME=$HOME"
+    echo "   All files will be owned by root, causing permission issues."
+    echo "   Run this as the target user instead: su - $(basename "$HOME") -c '$0 $*'"
+    echo ""
+    read -q "REPLY?Continue anyway? (y/N) " || exit 1
+    echo ""
+fi
+
 # Ensure custom bin directories are in PATH for command detection
 export PATH="$HOME/.go/bin:$HOME/go/bin:$HOME/.local/bin:$HOME/bin:$HOME/.cargo/bin:$HOME/.fzf/bin:$PATH"
 
@@ -126,7 +136,7 @@ else
     install_if_missing xsel install_xsel # Alternative clipboard utility for tmux
     install_if_missing uwu-cli install_uwu # uwu-cli for terminal UI
     install_if_missing codex install_codex # OpenAI Codex CLI
-    install_if_missing typst install_typst # Typst typesetting system for document compilation
+    # install_if_missing typst install_typst # Typst typesetting system for document compilation
     # install_if_missing watchexec install_cargo_tools # Watchexec CLI for file watching
 
     

@@ -7,14 +7,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# Get current Node version for PATH (if nvm is available)
-if command -v nvm >/dev/null 2>&1; then
-    NODE_VERSION=$(nvm current 2>/dev/null || echo "system")
-    if [[ "$NODE_VERSION" != "system" && "$NODE_VERSION" != "none" ]]; then
-        NODE_BIN_PATH="$HOME/.nvm/versions/node/$NODE_VERSION/bin"
-    fi
-fi
-
 # Consolidated PATH Setup (order matters - earlier entries take precedence)
 PATH_ADDITIONS=(
     "$HOME/.local/bin"              # Local user binaries
@@ -23,11 +15,9 @@ PATH_ADDITIONS=(
     "$HOME/.claude"               # Claude CLI
     "$HOME/.bun/bin"                # Bun runtime
     "$HOME/.npm-global/bin"         # Global npm packages
-    "$NODE_BIN_PATH"                # Node.js binaries (dynamic version)
     "$HOME/go/bin"                  # Go binaries
     "/usr/local/go/bin"             # Go installation
     "$HOME/.cargo/bin"              # Rust/Cargo binaries
-    "$HOME/.nvm"                    # nvm installation
     "/opt/homebrew/bin"             # Homebrew binaries
 )
 
