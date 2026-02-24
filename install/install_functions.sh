@@ -820,6 +820,34 @@ install_iterm2() {
     fi
 }
 
+install_contexts() {
+    if [[ "$OS_TYPE" == "mac" ]]; then
+        if [ ! -d "/Applications/Contexts.app" ]; then
+            gum_info "Installing Contexts..."
+            brew install --cask contexts
+            gum_success "Contexts installed successfully."
+        else
+            gum_dim "Contexts is already installed."
+        fi
+    else
+        gum_warning "Contexts is only available on macOS."
+    fi
+}
+
+install_raycast() {
+    if [[ "$OS_TYPE" == "mac" ]]; then
+        if [ ! -d "/Applications/Raycast.app" ]; then
+            gum_info "Installing Raycast..."
+            brew install --cask raycast
+            gum_success "Raycast installed successfully."
+        else
+            gum_dim "Raycast is already installed."
+        fi
+    else
+        gum_warning "Raycast is only available on macOS."
+    fi
+}
+
 install_nvm() {
     if [ ! -d "$HOME/.nvm" ]; then
         gum_info "Installing NVM..."
