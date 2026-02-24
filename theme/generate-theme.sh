@@ -29,8 +29,11 @@ if ! command -v jq >/dev/null 2>&1; then
     exit 1
 fi
 
-if ! command -v bc >/dev/null 2>&1; then
-    gum_error "bc is required but not installed"
+BC_AVAILABLE=false
+if command -v bc >/dev/null 2>&1; then
+    BC_AVAILABLE=true
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    gum_error "bc is required on macOS (for iTerm profile generation) but not installed"
     exit 1
 fi
 
@@ -130,11 +133,8 @@ jq -r 'to_entries[] | "set -g @thm_\(.key) \"\(.value)\""' "$COLORS_FILE" >> "$O
 gum_success "Generated tmux-colors.conf"
 
 # ===================================================================
-# 4. Generate iterm-profile.json
+# 4. Generate iterm-profile.json (macOS only, requires bc)
 # ===================================================================
-gum_info "Generating iterm-profile.json..."
-
-# Read colors from JSON
 base=$(jq -r '.base' "$COLORS_FILE")
 text=$(jq -r '.text' "$COLORS_FILE")
 surface0=$(jq -r '.surface0' "$COLORS_FILE")
@@ -155,8 +155,10 @@ flamingo=$(jq -r '.flamingo' "$COLORS_FILE")
 maroon=$(jq -r '.maroon' "$COLORS_FILE")
 crust=$(jq -r '.crust' "$COLORS_FILE")
 
-# Generate iTerm profile (write to temp file first to avoid race condition with iTerm watcher)
-cat > "$OUTPUT_DIR/iterm-profile.json.tmp" << HEADER
+if [[ "$OSTYPE" == "darwin"* ]] && [[ "$BC_AVAILABLE" == true ]]; then
+    gum_info "Generating iterm-profile.json..."
+
+    cat > "$OUTPUT_DIR/iterm-profile.json.tmp" << HEADER
 {
   "Profiles": [
     {
@@ -192,9 +194,12 @@ cat > "$OUTPUT_DIR/iterm-profile.json.tmp" << HEADER
   ]
 }
 HEADER
-mv "$OUTPUT_DIR/iterm-profile.json.tmp" "$OUTPUT_DIR/iterm-profile.json"
+    mv "$OUTPUT_DIR/iterm-profile.json.tmp" "$OUTPUT_DIR/iterm-profile.json"
 
-gum_success "Generated iterm-profile.json"
+    gum_success "Generated iterm-profile.json"
+else
+    gum_dim "Skipped iterm-profile.json (macOS + bc required)"
+fi
 
 # ===================================================================
 # 5. Generate cursor-overrides.json

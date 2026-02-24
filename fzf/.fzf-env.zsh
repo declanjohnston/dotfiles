@@ -65,10 +65,10 @@ export FZF_DEFAULT_OPTS=" \
     --preview 'fzf-preview {}' \
     --preview-window=right:70%:nowrap \
     --bind 'result:transform-list-label: \
-        if [[ -z $FZF_QUERY ]]; then \
-          echo \" $FZF_MATCH_COUNT items \" \
+        if [[ -z \$FZF_QUERY ]]; then \
+          echo \" \$FZF_MATCH_COUNT items \" \
         else \
-          echo \" $FZF_MATCH_COUNT matches for [$FZF_QUERY] \" \
+          echo \" \$FZF_MATCH_COUNT matches for [\$FZF_QUERY] \" \
         fi \
         ' \
     --bind 'focus:transform-preview-label:[[ -n {} ]] && printf \" Previewing [%s] \" {}' \

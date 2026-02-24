@@ -20,6 +20,13 @@ if [[ "$1" == "--minimal" ]]; then
     echo "🚀 Running MINIMAL installation (optimized for RunPod + Cursor)"
 fi
 
+# Safety: warn if running as root with a non-root $HOME (common in containers)
+if [[ "$(id -u)" -eq 0 && "$HOME" != "/root" ]]; then
+    echo "⚠️  WARNING: Running as root with HOME=$HOME"
+    echo "   All files will be owned by root. This is expected in containers (CoreWeave/RunPod)."
+    echo ""
+fi
+
 # Ensure custom bin directories are in PATH for command detection
 export PATH="$HOME/.go/bin:$HOME/go/bin:$HOME/.local/bin:$HOME/bin:$HOME/.cargo/bin:$HOME/.fzf/bin:$PATH"
 
@@ -40,7 +47,8 @@ gum_info "Generating theme files..."
 install_if_missing zsh install_zsh
 
 # install tmux early (required by TPM and install_dotfiles)
-install_if_missing tmux install_tmux
+# Called directly (not via install_if_missing) because install_tmux has its own version check
+install_tmux
 
 # install dotfiles
 install_if_dir_missing ~/dotfiles/local install_local_dotfiles
