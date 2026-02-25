@@ -92,6 +92,27 @@ install_dotfiles() {
         "$home/.claude/CLAUDE.md"
         "$home/.claude/settings.json"
         "$home/.codex/config.toml"
+        "$home/.zshrc"
+        "$home/.zprofile"
+        "$home/.zshenv"
+        "$home/.zlogin"
+        "$home/.zlogout"
+        "$home/.zpreztorc"
+        "$home/.bashrc"
+        "$home/.bash_profile"
+        "$home/.bash_logout"
+        "$home/.profile"
+        "$home/.tmux.conf"
+        "$home/.vimrc"
+        "$home/.p10k.zsh"
+        "$home/.paths.zsh"
+        "$home/.aliases-and-envs.zsh"
+        "$home/.fzf-config.zsh"
+        "$home/.fzf-env.zsh"
+        "$home/.fzf.bash"
+        "$home/.fzf.zsh"
+        "$home/.pylintrc"
+        "$home/.sourcery.yaml"
     )
 
     # Symlink tmux.conf first (required before TPM can install plugins)
@@ -146,9 +167,13 @@ install_dotfiles() {
         gum_info "Linking $(basename "$source") to $target"
 
         if [[ "$force_link" == "true" ]]; then
-            if [ -e "$target" ] || [ -L "$target" ]; then
-                gum_warning "Replacing existing path at $target (will re-symlink to $source)"
-                rm -rf "$target"
+            if [ -e "$target" ] && [ ! -L "$target" ]; then
+                local bkup_dir="$HOME/.dotfiles_backup"
+                mkdir -p "$bkup_dir"
+                gum_warning "Backing up $target -> $bkup_dir/$(basename "$target")"
+                mv "$target" "$bkup_dir/$(basename "$target")"
+            elif [ -L "$target" ]; then
+                rm -f "$target"
             fi
             ln -sf "$source" "$target"
             return 0
@@ -388,8 +413,8 @@ install_npm() {
 
 install_go() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        # For root users (containers), prefer direct download to avoid PPA issues
-        if [ "$(id -u)" -ne 0 ] && command -v add-apt-repository &>/dev/null; then
+        # For root users (containers) or broken add-apt-repository, prefer direct download
+        if [ "$(id -u)" -ne 0 ] && add-apt-repository --help &>/dev/null; then
             # Use PPA when available (standard Ubuntu installs, non-root)
             sudo add-apt-repository -y ppa:longsleep/golang-backports
             sudo apt update
@@ -520,8 +545,18 @@ install_shellcheck() {
 }
 
 install_claude_code_cli() {
-    # Install via official installer
-    curl -fsSL https://claude.ai/install.sh | bash
+    curl -fsSL https://claude.ai/install.sh | bash || true
+
+    if ! command -v claude >/dev/null 2>&1 && command -v npm >/dev/null 2>&1; then
+        gum_info "Curl installer failed, trying npm fallback..."
+        npm install -g @anthropic-ai/claude-code || true
+    fi
+
+    if command -v claude >/dev/null 2>&1; then
+        gum_success "Claude CLI installed ($(claude --version 2>/dev/null || echo 'unknown version'))."
+    else
+        gum_warning "Claude CLI not found in PATH after install — may need manual install."
+    fi
 }
 
 install_claude_plugin_marketplaces() {
@@ -617,18 +652,39 @@ install_nbpreview() {
     uv tool install nbcat
 }
 
+_tmux_version_at_least() {
+    local required="$1"
+    local current
+    current=$(tmux -V 2>/dev/null | grep -oP '[\d.]+' | head -1)
+    [[ -z "$current" ]] && return 1
+
+    local cur_major=${current%%.*}
+    local cur_minor=${current#*.}
+    cur_minor=${cur_minor%%[a-z]*}
+    local req_major=${required%%.*}
+    local req_minor=${required#*.}
+
+    [[ $cur_major -gt $req_major ]] && return 0
+    [[ $cur_major -eq $req_major && ${cur_minor:-0} -ge ${req_minor:-0} ]] && return 0
+    return 1
+}
+
 install_tmux() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        # Check if apt version is 3.3+
-        local apt_version=$(apt-cache policy tmux 2>/dev/null | grep -oP 'Candidate: \K[0-9.]+' || echo "0")
-        
-        if [[ $(echo "$apt_version" | cut -d. -f1) -ge 3 ]] && [[ $(echo "$apt_version" | cut -d. -f2) -ge 3 ]]; then
-            # apt has tmux 3.3+, use it
+        if command -v tmux >/dev/null 2>&1 && _tmux_version_at_least "3.3"; then
+            gum_dim "tmux $(tmux -V) already installed and >= 3.3"
+            return 0
+        fi
+
+        local apt_major apt_minor
+        apt_major=$(apt-cache policy tmux 2>/dev/null | grep -oP 'Candidate: \K[0-9]+' || echo "0")
+        apt_minor=$(apt-cache policy tmux 2>/dev/null | grep -oP 'Candidate: [0-9]+\.\K[0-9]+' || echo "0")
+
+        if [[ $apt_major -gt 3 ]] || { [[ $apt_major -eq 3 ]] && [[ $apt_minor -ge 3 ]]; }; then
             sudo apt install -y tmux
-            gum_success "tmux $apt_version installed via apt."
+            gum_success "tmux installed via apt."
         else
-            # apt version too old or not available, use static binary (3.3a+)
-            gum_info "apt tmux version ($apt_version) is too old, installing static binary (3.3a+)..."
+            gum_info "apt tmux candidate ($apt_major.$apt_minor) is too old, installing static binary (3.3a+)..."
             mkdir -p "$HOME/bin"
             wget -O "$HOME/bin/tmux" "n0p.me/bin/tmux" && chmod +x "$HOME/bin/tmux"
             gum_success "tmux 3.3a+ installed via binary download to ~/bin/tmux"
@@ -856,8 +912,8 @@ install_nvm() {
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
         [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
         nvm install --lts
-        nvm use --lts
-        gum_success "NVM installed gum_success with latest LTS Node.js."
+        nvm alias default node
+        gum_success "NVM installed with latest LTS Node.js."
     else
         gum_dim "NVM is already installed."
     fi
@@ -1014,7 +1070,12 @@ install_voicemode() {
     gum_info "Installing VoiceMode (speech-to-text for Claude Code)..."
 
     # Install the Claude Code plugin (marketplace must be added first via install_claude_plugin_marketplaces)
-    claude plugin install voicemode@mbailey
+    if ! claude plugin install voicemode@mbailey 2>/dev/null; then
+        gum_warning "voicemode plugin install failed, retrying..."
+        if ! claude plugin install voicemode@mbailey 2>/dev/null; then
+            gum_warning "voicemode plugin install failed twice, skipping."
+        fi
+    fi
 
     # Install VoiceMode CLI (no local services - cloud API only)
     if ! command_exists voicemode; then
@@ -1036,7 +1097,11 @@ install_voicemode() {
 }
 
 install_typst() {
-    install_on_brew_or_mac "typst" "typst"
+    if [[ "$OS_TYPE" == "mac" ]]; then
+        brew install typst
+    else
+        gum_dim "typst is macOS only, skipping on Linux."
+    fi
 }
 
 install_vivid() {
