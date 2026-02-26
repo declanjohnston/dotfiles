@@ -122,6 +122,7 @@ else
     install_if_missing lazydocker install_lazydocker # Terminal UI for managing Docker containers
     install_if_missing btop install_btop # Resource monitor with CPU, memory, disk, network stats
     install_if_missing mactop install_mactop # macOS-specific system monitor (Apple Silicon)
+    install_if_missing htop install_htop # Terminal UI for managing system processes
     install_if_missing ctop install_ctop # Container metrics and monitoring
     install_if_missing bat install_bat # Syntax highlighting cat replacement
     install_if_missing rg install_rg # Fast recursive grep alternative

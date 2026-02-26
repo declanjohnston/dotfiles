@@ -518,6 +518,14 @@ install_btop() {
     gum_success "btop installed successfully."
 }
 
+install_htop() {
+    if [[ "$OS_TYPE" == "linux" ]]; then
+        sudo apt -y install htop
+    elif [[ "$OS_TYPE" == "mac" ]]; then
+        brew install htop
+    fi
+    gum_success "htop installed successfully."
+}
 install_mactop() {
     if [[ "$OS_TYPE" == "mac" ]]; then
         brew install mactop
