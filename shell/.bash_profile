@@ -1,4 +1,4 @@
-zsh
+[[ $- == *i* ]] && exec zsh -l
 # export POWERLEVEL9K_INSTALLATION_DIR=$HOME/.zprezto/modules/prompt/external/powerlevel10k
 # # export PATH="$HOME/miniconda/bin:$PATH"  # commented out by conda initialize
 # export PATH=$HOME/local/bin:$PATH
