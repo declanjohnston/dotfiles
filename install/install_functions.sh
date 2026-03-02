@@ -723,9 +723,13 @@ install_fd() {
 
 install_jq() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        mkdir -p "$HOME/bin"
-        wget -O "$HOME/bin/jq" "n0p.me/bin/jq" && chmod +x "$HOME/bin/jq"
-        hash -r  # Refresh command hash table
+        if command -v sudo >/dev/null 2>&1; then
+            sudo apt install -y jq
+        else
+            mkdir -p "$HOME/bin"
+            wget -O "$HOME/bin/jq" "https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64" && chmod +x "$HOME/bin/jq"
+            hash -r
+        fi
     elif [[ "$OS_TYPE" == "mac" ]]; then
         brew install jq
     fi
