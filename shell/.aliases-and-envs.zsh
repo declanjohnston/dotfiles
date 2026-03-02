@@ -98,6 +98,8 @@ alias ht='htop -t -u "$(whoami)" -p "$(get_filtered_pids)"'
 alias archive-agent='$HOME/dev/archive-agent/Archive-Agent/archive-agent.sh'
 alias cc='claude'
 alias ccc='claude --continue'
+alias ccy='claude --dangerously-skip-permissions'
+alias cccy='claude --dangerously-skip-permissions --continue'
 alias upd='update-packages'
 alias updq='update-packages --quiet'
 
