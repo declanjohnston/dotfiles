@@ -1072,6 +1072,19 @@ install_uwu() {
     gum_success "uwu installed successfully."
 }
 
+install_gh() {
+    gum_info "Installing GitHub CLI..."
+    if [[ "$OS_TYPE" == "linux" ]]; then
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+        sudo apt update
+        sudo apt install -y gh
+    elif [[ "$OS_TYPE" == "mac" ]]; then
+        brew install gh
+    fi
+    gum_success "GitHub CLI installed successfully."
+}
+
 install_codex() {
     gum_info "Installing OpenAI Codex CLI..."
     npm install -g @openai/codex

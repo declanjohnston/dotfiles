@@ -88,7 +88,8 @@ if [[ "$MINIMAL_INSTALL" == true ]]; then
     install_if_missing fd install_fd # Fast find alternative
     install_if_missing yq install_yq # Command-line yaml processor
     install_if_missing claude install_claude_code_cli # Claude code CLI
-    
+    install_if_missing gh install_gh # GitHub CLI for repo, PR, and issue management
+
     # install tools that depend on uv (must be after uv installation)
     install_if_missing rich install_rich_cli # Rich CLI for terminal output
     install_if_missing markitdown install_markitdown # Markdown converter via uv
@@ -136,6 +137,7 @@ else
     install_if_missing xclip install_xclip # Clipboard utility for tmux integration
     install_if_missing xsel install_xsel # Alternative clipboard utility for tmux
     install_if_missing uwu-cli install_uwu # uwu-cli for terminal UI
+    install_if_missing gh install_gh # GitHub CLI for repo, PR, and issue management
     install_if_missing codex install_codex # OpenAI Codex CLI
     install_if_missing typst install_typst # Typst typesetting system for document compilation
     # install_if_missing watchexec install_cargo_tools # Watchexec CLI for file watching
