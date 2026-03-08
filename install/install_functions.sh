@@ -58,6 +58,41 @@ install_if_dir_missing() {
     fi
 }
 
+setup_git_identity() {
+    local gitconfig_local="$HOME/.gitconfig.local"
+
+    # If local gitconfig already has a [user] section, skip
+    if [ -f "$gitconfig_local" ] && grep -q '\[user\]' "$gitconfig_local" 2>/dev/null; then
+        local existing_name existing_email
+        existing_name=$(git config --file "$gitconfig_local" user.name 2>/dev/null)
+        existing_email=$(git config --file "$gitconfig_local" user.email 2>/dev/null)
+        gum_dim "Git identity already set: $existing_name <$existing_email>"
+        return 0
+    fi
+
+    gum_info "Setting up git identity..."
+
+    local default_name="Declan Johnston"
+    local default_email="declanjohnston5@gmail.com"
+    local name email
+
+    if _gum_check && [ -t 0 ]; then
+        name=$(gum input --placeholder "Full name" --value "$default_name" --header "Git user.name")
+        email=$(gum input --placeholder "Email" --value "$default_email" --header "Git user.email")
+    else
+        printf "Git user.name [%s]: " "$default_name"
+        read -r name
+        name="${name:-$default_name}"
+        printf "Git user.email [%s]: " "$default_email"
+        read -r email
+        email="${email:-$default_email}"
+    fi
+
+    git config --file "$gitconfig_local" user.name "$name"
+    git config --file "$gitconfig_local" user.email "$email"
+    gum_success "Git identity set: $name <$email>"
+}
+
 install_dotfiles() {
 
     mkdir -p "$HOME"/bin

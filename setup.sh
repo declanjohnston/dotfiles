@@ -57,6 +57,7 @@ install_if_dir_missing ~/dotfiles/local install_local_dotfiles
 # generate_plugin_configs
 
 install_dotfiles
+setup_git_identity
 install_meslo_font # MesloLGS NF font for Powerlevel10k theme
 
 if [[ "$MINIMAL_INSTALL" == false ]]; then
