@@ -573,7 +573,6 @@ install_claude_plugin_marketplaces() {
         "claude-plugins-official|anthropics/claude-plugins-official"
         "superpowers-marketplace|obra/superpowers-marketplace"
         "thedotmack|thedotmack/claude-mem"
-        "mbailey|mbailey/plugins"
     )
 
     gum_info "Installing Claude plugin marketplaces..."
@@ -1091,35 +1090,7 @@ install_codex() {
     gum_success "Codex installed successfully."
 }
 
-install_voicemode() {
-    gum_info "Installing VoiceMode (speech-to-text for Claude Code)..."
 
-    # Install the Claude Code plugin (marketplace must be added first via install_claude_plugin_marketplaces)
-    if ! claude plugin install voicemode@mbailey 2>/dev/null; then
-        gum_warning "voicemode plugin install failed, retrying..."
-        if ! claude plugin install voicemode@mbailey 2>/dev/null; then
-            gum_warning "voicemode plugin install failed twice, skipping."
-        fi
-    fi
-
-    # Install VoiceMode CLI (no local services - cloud API only)
-    if ! command_exists voicemode; then
-        gum_info "Installing VoiceMode CLI..."
-        uvx voice-mode-install --yes
-    fi
-
-    # Configure to use OpenAI cloud API only (no local fallback)
-    if command_exists voicemode; then
-        gum_info "Configuring VoiceMode for cloud-only (OpenAI API)..."
-        voicemode config set VOICEMODE_STT_BASE_URLS "https://api.openai.com/v1"
-        voicemode config set VOICEMODE_TTS_BASE_URLS "https://api.openai.com/v1"
-        voicemode config set VOICEMODE_PREFER_LOCAL "false"
-    fi
-
-    gum_success "VoiceMode installed (cloud-only mode)."
-    gum_info "Use /voice-input in Claude Code for speech-to-text"
-    gum_warning "Requires OPENAI_API_KEY in ~/.local_env.sh"
-}
 
 install_typst() {
     if [[ "$OS_TYPE" == "mac" ]]; then

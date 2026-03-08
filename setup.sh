@@ -167,7 +167,7 @@ fi
 
 # Claude plugins (runs for both full and minimal modes)
 install_claude_plugin_marketplaces
-# install_voicemode  # Speech-to-text, run /voicemode:install inside Claude after
+
 
 # Merge Cursor color overrides (if Cursor is installed)
 merge_cursor_colors
