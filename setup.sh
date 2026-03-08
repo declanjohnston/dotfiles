@@ -64,6 +64,7 @@ if [[ "$MINIMAL_INSTALL" == false ]]; then
     install_iterm2 # iTerm2 terminal emulator (macOS only)
     install_contexts # Contexts window switcher (macOS only)
     install_raycast # Raycast launcher (macOS only)
+    install_wispr_flow # Wispr Flow voice dictation (macOS only)
 fi
 
 # install essentials

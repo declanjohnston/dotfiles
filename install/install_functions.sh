@@ -732,8 +732,8 @@ install_tmux() {
             gum_success "tmux 3.3a+ installed via binary download to ~/bin/tmux"
         fi
     elif [[ "$OS_TYPE" == "mac" ]]; then
-        brew install tmux
-        gum_success "tmux installed successfully."
+        brew upgrade tmux 2>/dev/null || brew install tmux
+        gum_success "tmux $(tmux -V) installed."
     fi
 }
 
@@ -947,6 +947,20 @@ install_raycast() {
         fi
     else
         gum_warning "Raycast is only available on macOS."
+    fi
+}
+
+install_wispr_flow() {
+    if [[ "$OS_TYPE" == "mac" ]]; then
+        if [ ! -d "/Applications/Wispr Flow.app" ]; then
+            gum_info "Installing Wispr Flow..."
+            brew install --cask wispr-flow
+            gum_success "Wispr Flow installed successfully."
+        else
+            gum_dim "Wispr Flow is already installed."
+        fi
+    else
+        gum_warning "Wispr Flow is only available on macOS."
     fi
 }
 
