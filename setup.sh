@@ -91,6 +91,7 @@ if [[ "$MINIMAL_INSTALL" == true ]]; then
     install_if_missing yq install_yq # Command-line yaml processor
     install_if_missing claude install_claude_code_cli # Claude code CLI
     install_if_missing gh install_gh # GitHub CLI for repo, PR, and issue management
+    install_if_missing ngrok install_ngrok # Secure tunnels to localhost
 
     # install tools that depend on uv (must be after uv installation)
     install_if_missing rich install_rich_cli # Rich CLI for terminal output
@@ -120,6 +121,7 @@ else
     install_if_missing uv install_uv # Python package manager (must be before uvx_tools)
     install_if_missing tldr install_tealdeer # Simplified and community-driven man pages
     install_if_missing hx install_helix # Modern terminal-based text editor
+    install_if_missing gum install_gum # Terminal UI components for shell scripts
     install_if_missing glow install_glow # Markdown terminal viewer with style
     install_if_missing lazygit install_lazygit # Terminal UI for git commands
     install_if_missing lazydocker install_lazydocker # Terminal UI for managing Docker containers
@@ -140,6 +142,7 @@ else
     install_if_missing xsel install_xsel # Alternative clipboard utility for tmux
     install_if_missing uwu-cli install_uwu # uwu-cli for terminal UI
     install_if_missing gh install_gh # GitHub CLI for repo, PR, and issue management
+    install_if_missing ngrok install_ngrok # Secure tunnels to localhost
     install_if_missing codex install_codex # OpenAI Codex CLI
     install_if_missing typst install_typst # Typst typesetting system for document compilation
     # install_if_missing watchexec install_cargo_tools # Watchexec CLI for file watching

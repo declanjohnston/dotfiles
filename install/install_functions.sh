@@ -514,6 +514,18 @@ update_helix_grammars() {
     gum_success "Helix grammars updated."
 }
 
+install_gum() {
+    if [[ "$OS_TYPE" == "linux" ]]; then
+        mkdir -p /etc/apt/keyrings
+        curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+        echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+        sudo apt update && sudo apt install -y gum
+    elif [[ "$OS_TYPE" == "mac" ]]; then
+        brew install gum
+    fi
+    gum_success "gum installed successfully."
+}
+
 install_glow() {
     export PATH="$HOME/go/bin:$PATH"
     go install github.com/charmbracelet/glow@latest
@@ -1131,6 +1143,19 @@ install_gh() {
         brew install gh
     fi
     gum_success "GitHub CLI installed successfully."
+}
+
+install_ngrok() {
+    gum_info "Installing ngrok..."
+    if [[ "$OS_TYPE" == "linux" ]]; then
+        curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc > /dev/null
+        echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list > /dev/null
+        sudo apt update
+        sudo apt install -y ngrok
+    elif [[ "$OS_TYPE" == "mac" ]]; then
+        brew install ngrok
+    fi
+    gum_success "ngrok installed successfully."
 }
 
 install_codex() {
