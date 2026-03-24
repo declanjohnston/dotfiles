@@ -633,7 +633,8 @@ install_claude_plugin_marketplaces() {
         local repo="${entry#*|}"
 
         if echo "$installed" | grep -q "$name"; then
-            gum_dim "  $name already installed"
+            gum_dim "  $name already installed, updating..."
+            claude plugin marketplace update "$name" 2>/dev/null
         else
             gum_info "  Adding $name..."
             if claude plugin marketplace add "$repo" 2>/dev/null; then
@@ -645,6 +646,34 @@ install_claude_plugin_marketplaces() {
     done
 
     gum_success "Claude plugin marketplaces installed"
+
+    # Install/update plugins from marketplaces
+    # Plugins listed here will be installed if missing or updated if already present
+    local -a plugins=(
+        "superpowers@superpowers-marketplace"
+        "context7@claude-plugins-official"
+    )
+
+    gum_info "Installing Claude plugins..."
+
+    local installed_plugins
+    installed_plugins=$(claude plugin list 2>/dev/null || echo "")
+
+    for plugin in "${plugins[@]}"; do
+        if echo "$installed_plugins" | grep -q "$plugin"; then
+            gum_dim "  $plugin already installed, updating..."
+            claude plugin update "$plugin" 2>/dev/null
+        else
+            gum_info "  Installing $plugin..."
+            if claude plugin install "$plugin" 2>/dev/null; then
+                gum_success "  $plugin installed"
+            else
+                gum_warning "  Failed to install $plugin"
+            fi
+        fi
+    done
+
+    gum_success "Claude plugins installed"
 }
 
 install_chafa() {
