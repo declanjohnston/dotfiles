@@ -1,3 +1,9 @@
+# Locale — use C.UTF-8 as fallback when en_US.UTF-8 isn't installed (e.g. remote Linux)
+if ! locale -a 2>/dev/null | grep -qi 'en_US.utf'; then
+  export LC_ALL=C.UTF-8
+  export LANG=C.UTF-8
+fi
+
 # Source PATH management
 [[ -f ~/.paths.zsh ]] && source ~/.paths.zsh
 

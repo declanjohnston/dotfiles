@@ -60,7 +60,6 @@
     ],
     "deny": []
   },
-  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "zsh ~/.claude/statusline.sh"

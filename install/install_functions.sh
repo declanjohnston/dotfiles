@@ -541,6 +541,14 @@ install_lazydocker() {
     go install github.com/jesseduffield/lazydocker@latest
 }
 
+install_task() {
+    if [[ "$OS_TYPE" == "linux" ]]; then
+        sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b "$HOME/.local/bin"
+    elif [[ "$OS_TYPE" == "mac" ]]; then
+        brew install go-task
+    fi
+}
+
 install_btop() {
     if [[ "$OS_TYPE" == "linux" ]]; then
         if command -v snap &>/dev/null; then
