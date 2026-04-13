@@ -24,6 +24,9 @@ fi
 #
 # Source Prezto.
 
+# Must be exported before prezto loads for its completion module to honour it
+export ZSH_DISABLE_COMPFIX="true"
+
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
@@ -34,16 +37,15 @@ export VISUAL=hx
 export PAGER='less -r'
 export DIRSTACKSIZE=20
 export KEYTIMEOUT=1
-export ZSH_DISABLE_COMPFIX="true"
 
-# Source Core Configuration Files
-source ~/helper_functions.sh
-source ~/gum_utils.sh
-source ~/dotfiles/theme/generated/shell-colors.sh
-source ~/lscolors.sh
-source ~/.aliases-and-envs.zsh
-source ~/.local_env.sh  # Should contain API keys and local-specific settings
-source ~/.paths.zsh
+# Source Core Configuration Files (guarded so missing files don't noisy-error on fresh containers)
+[[ -f ~/helper_functions.sh ]] && source ~/helper_functions.sh
+[[ -f ~/gum_utils.sh ]] && source ~/gum_utils.sh
+[[ -f ~/dotfiles/theme/generated/shell-colors.sh ]] && source ~/dotfiles/theme/generated/shell-colors.sh
+[[ -f ~/lscolors.sh ]] && source ~/lscolors.sh
+[[ -f ~/.aliases-and-envs.zsh ]] && source ~/.aliases-and-envs.zsh
+[[ -f ~/.local_env.sh ]] && source ~/.local_env.sh  # Should contain API keys and local-specific settings
+[[ -f ~/.paths.zsh ]] && source ~/.paths.zsh
 
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -52,7 +54,7 @@ source ~/.paths.zsh
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source ~/.fzf-config.zsh
+[[ -f ~/.fzf-config.zsh ]] && source ~/.fzf-config.zsh
 
 # Numeric sort
 setopt numeric_glob_sort
