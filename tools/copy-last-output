@@ -23,9 +23,11 @@ if [[ -z "$start" || -z "$end" ]]; then
 fi
 
 # Convert absolute positions to capture-pane relative coordinates.
-# +1 skips the command line itself; -1 excludes the line where the next prompt draws.
+# By the time preexec fires, zsh has already consumed Enter, so the cursor is
+# on the row BELOW the command line — no +1 offset needed on start.
+# -1 on end excludes the line where the next prompt is about to draw.
 h=$(tmux display-message -p '#{history_size}')
-rel_start=$((start - h + 1))
+rel_start=$((start - h))
 rel_end=$((end - h - 1))
 
 if (( rel_start > rel_end )); then
