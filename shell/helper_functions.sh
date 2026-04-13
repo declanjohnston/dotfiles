@@ -58,6 +58,28 @@ file_count() {
 
 }
 
+# Track command output boundaries in tmux for tools/copy-last-output.
+# preexec fires just before the command runs; precmd fires after it finishes.
+# Markers are absolute line numbers (history + cursor_y) stored as pane-local
+# tmux options, so every pane has its own pair.
+if [[ -n "$TMUX" ]]; then
+    _clo_preexec() {
+        local h y
+        h=$(tmux display-message -p '#{history_size}')
+        y=$(tmux display-message -p '#{cursor_y}')
+        tmux set-option -p @clo_start "$((h + y))"
+    }
+    _clo_precmd() {
+        local h y
+        h=$(tmux display-message -p '#{history_size}')
+        y=$(tmux display-message -p '#{cursor_y}')
+        tmux set-option -p @clo_end "$((h + y))"
+    }
+    autoload -Uz add-zsh-hook
+    add-zsh-hook preexec _clo_preexec
+    add-zsh-hook precmd _clo_precmd
+fi
+
 remove_broken_symlinks() {
     local dir="${1:-.}"  # Default to the current directory if no argument is provided
     local broken_links=()

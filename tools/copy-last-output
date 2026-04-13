@@ -1,0 +1,52 @@
+#!/usr/bin/env zsh
+# Copy the output of the last completed command from tmux scrollback to the clipboard.
+#
+# Requires the _clo_preexec/_clo_precmd hooks in shell/helper_functions.sh —
+# those record pane-local @clo_start / @clo_end markers as absolute line numbers
+# (history_size + cursor_y) so we know exactly where the command output lives.
+#
+# Clipboard path: `tmux load-buffer -w -` pushes through tmux, which emits OSC 52
+# to the outer terminal (works locally and over SSH, matching the copy-mode bind
+# in tmux/.tmux.conf).
+#
+# Feedback goes via `tmux display-message` so it never disturbs the pane contents.
+set -e
+
+msg() { tmux display-message "$1"; }
+
+start=$(tmux show-options -pv @clo_start 2>/dev/null || true)
+end=$(tmux show-options -pv @clo_end 2>/dev/null || true)
+
+if [[ -z "$start" || -z "$end" ]]; then
+    msg "No command markers found (is the zsh hook loaded?)"
+    exit 0
+fi
+
+# Convert absolute positions to capture-pane relative coordinates.
+# +1 skips the command line itself; -1 excludes the line where the next prompt draws.
+h=$(tmux display-message -p '#{history_size}')
+rel_start=$((start - h + 1))
+rel_end=$((end - h - 1))
+
+if (( rel_start > rel_end )); then
+    msg "No output to copy"
+    exit 0
+fi
+
+output=$(tmux capture-pane -p -S "$rel_start" -E "$rel_end")
+
+# Trim trailing blank lines
+while [[ "$output" == *$'\n' ]]; do
+    output="${output%$'\n'}"
+done
+
+if [[ -z "$output" ]]; then
+    msg "No output to copy"
+    exit 0
+fi
+
+# -w forces tmux to also set the system clipboard (via OSC 52) in addition to
+# loading the internal buffer. Requires `set-clipboard on` in .tmux.conf.
+printf '%s' "$output" | tmux load-buffer -w -
+lines=$(printf '%s\n' "$output" | wc -l | tr -d ' ')
+msg "Copied $lines lines to clipboard"
