@@ -235,7 +235,8 @@ install_dotfiles() {
 
         # Preview files
         "$dotfiles/preview/fzf-preview.sh:$bin/fzf-preview"
-        "$dotfiles/preview/torch-preview.sh:$bin/torch-preview"
+        "$dotfiles/preview/torch-preview.py:$bin/torch-preview"
+        "$dotfiles/preview/onnx-preview.py:$bin/onnx-preview"
         "$dotfiles/preview/npy-preview.py:$bin/npy-preview"
         "$dotfiles/preview/feather-preview.py:$bin/feather-preview"
         "$dotfiles/preview/pkl-preview.py:$bin/pkl-preview"
@@ -524,11 +525,6 @@ install_gum() {
         brew install gum
     fi
     gum_success "gum installed successfully."
-}
-
-install_glow() {
-    export PATH="$HOME/go/bin:$PATH"
-    go install github.com/charmbracelet/glow@latest
 }
 
 install_lazygit() {
@@ -829,6 +825,16 @@ install_bc() {
     gum_success "bc installed successfully."
 }
 
+install_file() {
+    if [[ "$OS_TYPE" == "linux" ]]; then
+        sudo apt install -y file
+    elif [[ "$OS_TYPE" == "mac" ]]; then
+        # file is pre-installed on macOS
+        :
+    fi
+    gum_success "file installed successfully."
+}
+
 install_pq() {
     mkdir -p "$HOME/bin"
     if [[ "$OS_TYPE" == "linux" ]]; then
@@ -1113,6 +1119,12 @@ install_iterm2_shell_integration() {
 install_cargo_tools() {
     cargo install --locked watchexec-cli
     gum_success "watchexec-cli installed successfully."
+}
+
+install_mdterm() {
+    source "$HOME/.cargo/env"
+    export PATH="$HOME/.cargo/bin:$PATH"
+    cargo install mdterm
 }
 
 install_markdown_oxide() {

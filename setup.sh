@@ -38,6 +38,7 @@ source "./shell/gum_utils.sh"
 # Install jq and bc early (required by generate-theme.sh)
 install_if_missing jq install_jq
 install_if_missing bc install_bc
+install_if_missing file install_file
 
 # Generate theme files before other setup
 gum_info "Generating theme files..."
@@ -123,7 +124,6 @@ else
     install_if_missing tldr install_tealdeer # Simplified and community-driven man pages
     install_if_missing hx install_helix # Modern terminal-based text editor
     install_if_missing gum install_gum # Terminal UI components for shell scripts
-    install_if_missing glow install_glow # Markdown terminal viewer with style
     install_if_missing lazygit install_lazygit # Terminal UI for git commands
     install_if_missing lazydocker install_lazydocker # Terminal UI for managing Docker containers
     install_if_missing btop install_btop # Resource monitor with CPU, memory, disk, network stats
@@ -148,6 +148,7 @@ else
     install_if_missing codex install_codex # OpenAI Codex CLI
     install_if_missing typst install_typst # Typst typesetting system for document compilation
     # install_if_missing watchexec install_cargo_tools # Watchexec CLI for file watching
+    install_if_missing mdterm install_mdterm # Rich markdown renderer (used by fzf-preview)
 
     
     # install tools that depend on uv (must be after uv installation)
