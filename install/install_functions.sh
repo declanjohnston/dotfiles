@@ -756,6 +756,12 @@ _tmux_version_at_least() {
     return 1
 }
 
+# Floor is 3.3 because:
+#   - set-option -p (pane-local user opts)  → 3.0+   (copy-last-output)
+#   - load-buffer -w (set system clipboard) → 3.2+   (copy-last-output)
+#   - set-clipboard on + OSC 52 passthrough → 3.2+   (tmux/.tmux.conf copy-mode)
+# 3.3 is what apt ships on current Ubuntu / the static mirror serves, so we
+# don't drop below it. Don't lower without checking the features above.
 install_tmux() {
     if [[ "$OS_TYPE" == "linux" ]]; then
         if command -v tmux >/dev/null 2>&1 && _tmux_version_at_least "3.3"; then
