@@ -8,16 +8,16 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Separator glyphs (powerline rounded)
-L=$(printf '\ue0b6')
-R=$(printf '\ue0b4')
+L=''
+R=''
 
 # Icon glyphs (Material Design nerd font)
-ICON_CLOCK=$(printf '\U000F0954')     # 󰥔 five_hour
-ICON_CAL=$(printf '\U000F00ED')       # 󰃭 seven_day
-ICON_BRAIN=$(printf '\U000F06E8')     # 󰛨 opus
-ICON_BOLT=$(printf '\U000F0E39')      # 󰸹 sonnet
-ICON_PKG=$(printf '\U000F0820')       # 󰠠 credits
-ICON_TIMER=$(printf '\U000F0996')     # 󰦖 reset
+ICON_CLOCK='󰥔'     # 󰥔 five_hour
+ICON_CAL='󰃭'       # 󰃭 seven_day
+ICON_BRAIN='󰛨'     # 󰛨 opus
+ICON_BOLT='󰸹'      # 󰸹 sonnet
+ICON_PKG='󰠠'       # 󰠠 credits
+ICON_TIMER='󰦖'     # 󰦖 reset
 
 # Catppuccin Mocha palette (matching theme/generated/tmux-colors.conf)
 STATUS_BG="#181825"
