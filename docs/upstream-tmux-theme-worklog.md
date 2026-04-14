@@ -149,6 +149,7 @@ Format: `YYYY-MM-DD | step-id | outcome | notes`
 2026-04-14 | dedupe+drop dir | KEPT    | dropped the directory pill (redundant, shown elsewhere) while we were in there; CPU now starts the flow via `set -g`. SSH/local branches still duplicated but simpler now.
 2026-04-14 | C1              | KEPT    | agents_cache_refresh.sh upgraded wholesale from upstream: TTL 60→120s, Linux ~/.claude/.credentials.json fallback (critical — macOS-only keychain was silently failing on CoreWeave, pills were all green-zeros), API-error handling (touch cache instead of overwriting with zeros), new opus/sonnet fields, credits formula uses API's pre-computed utilization.
 2026-04-14 | B2              | KEPT    | imported pk_claude_metric.sh from upstream. Linux-adjusted: added plain `date -d` as first branch before the macOS-only `gdate`/`date -j -f` fallbacks so the `reset` metric works on CoreWeave.
+2026-04-14 | B4              | KEPT    | added agents_status_bar.sh (6 two-tone pills: 5h, 7d, opus, sonnet, credits, reset) replacing agents_status_vscode.sh reference in update_session_status.sh. Fixed Macchiato→Mocha base color bug (#24273a→#181825). Old renderer preserved as agents_status_vscode.sh for easy revert.
 ```
 
 When you try a step, append a line. If you revert, note the reason so next-time-you doesn't re-try the same failed approach.

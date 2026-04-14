@@ -28,8 +28,8 @@ if [[ "$session_name" == "agents" ]]; then
 #[fg=$crust,bg=$peach]#{?client_prefix,#[bg=$yellow],} 🦀 \
 #[fg=$peach,bg=$base]#{?client_prefix,#[fg=$yellow],}$right_cap"
 
-    # Right: Usage metrics only
-    tmux set-option status-right "#($dir/agents_status_vscode.sh)"
+    # Right: Claude usage metrics (two-tone pills: 5h, 7d, opus, sonnet, credits, reset)
+    tmux set-option status-right "#($dir/agents_status_bar.sh)"
 
     # Window list: non-current windows muted
     tmux set-option window-status-format "#[fg=$CATPPUCCIN_SURFACE2] #W "
