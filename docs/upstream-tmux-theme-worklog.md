@@ -138,7 +138,11 @@ Key upstream commits referenced here:
 Format: `YYYY-MM-DD | step-id | outcome | notes`
 
 ```
-2026-04-13 | (initial doc) | — | baseline captured; no changes applied yet
+2026-04-13 | (initial doc)   | —       | baseline captured; no changes applied yet
+2026-04-14 | A1              | skipped | doesn't apply — existing pill already dynamic (green default / red prefix); upstream path is powerkit migration, not a small tweak
+2026-04-14 | A4              | skipped | no clean translation; upstream `ok-base` is a semantic from their own theme abstraction, this fork uses raw `@thm_*` tokens
+2026-04-14 | A3 (two-tone)   | KEPT    | applied hand-rolled (not powerkit) to local+SSH status-right pills; kept catppuccin plugin. Lighter shades computed as 25% white-mix. Battery stays single-tone (dynamic color).
+2026-04-14 | dedupe+drop dir | KEPT    | dropped the directory pill (redundant, shown elsewhere) while we were in there; CPU now starts the flow via `set -g`. SSH/local branches still duplicated but simpler now.
 ```
 
 When you try a step, append a line. If you revert, note the reason so next-time-you doesn't re-try the same failed approach.
