@@ -135,7 +135,10 @@ Key upstream commits referenced here:
 
 ## Known issues — circle back
 
-- **Yank broken inside the F11 agents session popup.** Known nested-tmux + OSC 52 passthrough quirk. tmux has `set-clipboard on` and `allow-passthrough` at the outer layer, but `display-popup -E "tmux attach-session -t agents"` creates a nested client that may not propagate OSC 52 through the popup. Investigate: iTerm2's "Applications in terminal may access clipboard", explicit `copy-pipe` target that wraps OSC 52 manually, or switching the F11 binding from `attach-session` to `switch-client -t agents` (loses popup framing but avoids nesting).
+- **~~Yank broken inside the F11 agents session popup.~~** FIXED in `6378dae`. Custom `osc52-copy.sh` script writes OSC 52 to all tmux client TTYs, bypassing the nested-tmux popup issue. `allow-passthrough all` + `set-clipboard on` retained. Tried `set-clipboard external` first — didn't help.
+- **Agents count shows 0 when pane is SSH'd into remote.** Minor. `agents_count.sh` checks `pane_current_command` for `claude`/`node`, but an SSH pane shows `ssh` as the command. Claude runs on the remote side, invisible to local tmux. Not worth overengineering — would require also counting `ssh` panes, which is a rough heuristic.
+- **Conditional pills (GPU, SSH) have gaps** between them and the flowing pill chain. Each conditional `if-shell` block starts from `@thm_base` independently. Proper fix: generate entire status-right dynamically from a single script that detects available pills and chains colors. Meaningful rewrite, not a quick tweak.
+- **macOS bash 3.2 breaks `printf '\U...'`** in agents_status_bar.sh. FIXED in `ecb2806` — inlined all Unicode glyphs as literal UTF-8. Also affects any new scripts that use `\u`/`\U` escapes — always inline the actual character instead.
 
 ## Worklog (append as you iterate)
 
@@ -150,6 +153,27 @@ Format: `YYYY-MM-DD | step-id | outcome | notes`
 2026-04-14 | C1              | KEPT    | agents_cache_refresh.sh upgraded wholesale from upstream: TTL 60→120s, Linux ~/.claude/.credentials.json fallback (critical — macOS-only keychain was silently failing on CoreWeave, pills were all green-zeros), API-error handling (touch cache instead of overwriting with zeros), new opus/sonnet fields, credits formula uses API's pre-computed utilization.
 2026-04-14 | B2              | KEPT    | imported pk_claude_metric.sh from upstream. Linux-adjusted: added plain `date -d` as first branch before the macOS-only `gdate`/`date -j -f` fallbacks so the `reset` metric works on CoreWeave.
 2026-04-14 | B4              | KEPT    | added agents_status_bar.sh (6 two-tone pills: 5h, 7d, opus, sonnet, credits, reset) replacing agents_status_vscode.sh reference in update_session_status.sh. Fixed Macchiato→Mocha base color bug (#24273a→#181825). Old renderer preserved as agents_status_vscode.sh for easy revert.
+2026-04-14 | macOS compat    | KEPT    | inlined UTF-8 glyphs in agents_status_bar.sh for bash 3.2 compat (ecb2806)
+2026-04-14 | new-window hook | KEPT    | combined after-new-window hook with update_session_status.sh so C-a c in agents session inherits pill styling (e9f4078)
+2026-04-14 | yank fix        | KEPT    | osc52-copy.sh writes OSC 52 to all client TTYs, bypassing nested-tmux popup issue. Wired as copy-pipe target for y and MouseDragEnd1Pane (6378dae)
+2026-04-14 | B1 (ssh_status) | KEPT    | ssh_status.sh as conditional pink pill (if-shell), shows hostname -s + client ping latency. Supports SSH_DISPLAY_NAME env override (44fcfff)
+2026-04-14 | digest popup    | KEPT    | C-a d opens claude-session-digest status in a popup (exec cat to hold output). Also fixed C-a g (nvidia-smi -l 1 replaces watch) (bdc73a2)
+2026-04-14 | session-digest  | KEPT    | imported tools/claude-session-digest from upstream (status/extract/sync subcommands) (90945be)
 ```
+
+## What's left from the upstream review (not started)
+
+From `docs/upstream-review-2026-04.md` top picks table, items not yet touched:
+
+| # | Thing | Notes |
+|---|---|---|
+| 1 | `ctx-*` tools + context files | Progressive disclosure system. Highest remaining ROI. |
+| 2 | Linting system (`linters/`) | Universal lint dispatcher + ruff/biome/lefthook configs. |
+| ~~3~~ | ~~fzf-preview overhaul~~ | Done in a prior session. |
+| ~~4~~ | ~~Shell guards + `copy-last-output` hooks~~ | Done in a prior session. |
+| 5 | Shell themes (gruvbox on SSH) | OSC palette swap — only works in iTerm2. |
+| 8 | Prompt bank | 4 markdown files, trivial bulk copy. |
+| 9 | Claude agents (plan-writer, context-researcher) | Bigger undertaking, 3-4h each. |
+| 10 | Individual installers from install_functions.sh | Cherry-pick ruff/biome/lefthook/mdterm. |
 
 When you try a step, append a line. If you revert, note the reason so next-time-you doesn't re-try the same failed approach.
