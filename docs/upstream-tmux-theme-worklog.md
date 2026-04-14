@@ -143,6 +143,7 @@ Format: `YYYY-MM-DD | step-id | outcome | notes`
 2026-04-14 | A4              | skipped | no clean translation; upstream `ok-base` is a semantic from their own theme abstraction, this fork uses raw `@thm_*` tokens
 2026-04-14 | A3 (two-tone)   | KEPT    | applied hand-rolled (not powerkit) to local+SSH status-right pills; kept catppuccin plugin. Lighter shades computed as 25% white-mix. Battery stays single-tone (dynamic color).
 2026-04-14 | dedupe+drop dir | KEPT    | dropped the directory pill (redundant, shown elsewhere) while we were in there; CPU now starts the flow via `set -g`. SSH/local branches still duplicated but simpler now.
+2026-04-14 | C1              | KEPT    | agents_cache_refresh.sh upgraded wholesale from upstream: TTL 60→120s, Linux ~/.claude/.credentials.json fallback (critical — macOS-only keychain was silently failing on CoreWeave, pills were all green-zeros), API-error handling (touch cache instead of overwriting with zeros), new opus/sonnet fields, credits formula uses API's pre-computed utilization.
 ```
 
 When you try a step, append a line. If you revert, note the reason so next-time-you doesn't re-try the same failed approach.
