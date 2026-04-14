@@ -821,6 +821,11 @@ install_jq() {
     gum_success "jq installed successfully."
 }
 
+install_less() {
+    install_on_brew_or_mac less
+    gum_success "less installed successfully."
+}
+
 install_bc() {
     if [[ "$OS_TYPE" == "linux" ]]; then
         sudo apt install -y bc

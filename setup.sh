@@ -36,6 +36,7 @@ source "./shell/.aliases-and-envs.zsh"
 source "./shell/gum_utils.sh"
 
 # Install jq and bc early (required by generate-theme.sh)
+install_if_missing less install_less
 install_if_missing jq install_jq
 install_if_missing bc install_bc
 install_if_missing file install_file
