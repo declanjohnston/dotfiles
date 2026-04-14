@@ -133,6 +133,10 @@ Key upstream commits referenced here:
 
 ---
 
+## Known issues — circle back
+
+- **Yank broken inside the F11 agents session popup.** Known nested-tmux + OSC 52 passthrough quirk. tmux has `set-clipboard on` and `allow-passthrough` at the outer layer, but `display-popup -E "tmux attach-session -t agents"` creates a nested client that may not propagate OSC 52 through the popup. Investigate: iTerm2's "Applications in terminal may access clipboard", explicit `copy-pipe` target that wraps OSC 52 manually, or switching the F11 binding from `attach-session` to `switch-client -t agents` (loses popup framing but avoids nesting).
+
 ## Worklog (append as you iterate)
 
 Format: `YYYY-MM-DD | step-id | outcome | notes`
@@ -144,6 +148,7 @@ Format: `YYYY-MM-DD | step-id | outcome | notes`
 2026-04-14 | A3 (two-tone)   | KEPT    | applied hand-rolled (not powerkit) to local+SSH status-right pills; kept catppuccin plugin. Lighter shades computed as 25% white-mix. Battery stays single-tone (dynamic color).
 2026-04-14 | dedupe+drop dir | KEPT    | dropped the directory pill (redundant, shown elsewhere) while we were in there; CPU now starts the flow via `set -g`. SSH/local branches still duplicated but simpler now.
 2026-04-14 | C1              | KEPT    | agents_cache_refresh.sh upgraded wholesale from upstream: TTL 60→120s, Linux ~/.claude/.credentials.json fallback (critical — macOS-only keychain was silently failing on CoreWeave, pills were all green-zeros), API-error handling (touch cache instead of overwriting with zeros), new opus/sonnet fields, credits formula uses API's pre-computed utilization.
+2026-04-14 | B2              | KEPT    | imported pk_claude_metric.sh from upstream. Linux-adjusted: added plain `date -d` as first branch before the macOS-only `gdate`/`date -j -f` fallbacks so the `reset` metric works on CoreWeave.
 ```
 
 When you try a step, append a line. If you revert, note the reason so next-time-you doesn't re-try the same failed approach.
