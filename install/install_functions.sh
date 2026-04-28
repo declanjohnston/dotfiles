@@ -98,6 +98,7 @@ install_dotfiles() {
     mkdir -p "$HOME"/bin
     mkdir -p "$HOME/dev/projects"
     mkdir -p "$HOME/.config/helix"
+    mkdir -p "$HOME/.config/opencode"
     mkdir -p "$HOME/.local/bin"
     mkdir -p "$HOME/.claude"
     mkdir -p "$HOME/.codex"
@@ -126,6 +127,7 @@ install_dotfiles() {
         "$home/.claude/plugins"
         "$home/.claude/CLAUDE.md"
         "$home/.claude/settings.json"
+        "$home/.config/opencode/opencode.json"
         "$home/.codex/config.toml"
         "$home/.zshrc"
         "$home/.zprofile"
@@ -298,6 +300,9 @@ install_dotfiles() {
         "$dotfiles/maintained_global_claude/settings.json:$home/.claude/settings.json"
         "$dotfiles/maintained_global_claude/statusline.sh:$home/.claude/statusline.sh"
         "$dotfiles/maintained_global_claude/CLAUDE.md:$home/.claude/CLAUDE.md"
+
+        # opencode config
+        "$dotfiles/opencode/opencode.json:$home/.config/opencode/opencode.json"
 
         # codex config
         "$dotfiles/codex/config.toml:$home/.codex/config.toml"
@@ -619,9 +624,13 @@ install_claude_code_cli() {
 }
 
 install_claude_plugin_marketplaces() {
+    if ! command -v claude >/dev/null 2>&1; then
+        gum_warning "Claude CLI not found in PATH; skipping Claude plugin setup."
+        return 0
+    fi
+
     # Define marketplaces: name|repo
     local -a marketplaces=(
-        "claude-plugins-official|anthropics/claude-plugins-official"
         "superpowers-marketplace|obra/superpowers-marketplace"
         "thedotmack|thedotmack/claude-mem"
     )
@@ -1222,6 +1231,22 @@ install_codex() {
     gum_info "Installing OpenAI Codex CLI..."
     npm install -g @openai/codex
     gum_success "Codex installed successfully."
+}
+
+install_opencode() {
+    curl -fsSL https://opencode.ai/install | bash || true
+    export PATH="$HOME/.opencode/bin:$PATH"
+
+    if ! command -v opencode >/dev/null 2>&1 && command -v npm >/dev/null 2>&1; then
+        gum_info "OpenCode curl installer failed, trying npm fallback..."
+        npm install -g opencode-ai || true
+    fi
+
+    if command -v opencode >/dev/null 2>&1; then
+        gum_success "OpenCode CLI installed ($(opencode --version 2>/dev/null || echo 'unknown version'))."
+    else
+        gum_warning "OpenCode CLI not found in PATH after install — may need manual install."
+    fi
 }
 
 

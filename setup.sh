@@ -28,7 +28,7 @@ if [[ "$(id -u)" -eq 0 && "$HOME" != "/root" ]]; then
 fi
 
 # Ensure custom bin directories are in PATH for command detection
-export PATH="$HOME/.go/bin:$HOME/go/bin:$HOME/.local/bin:$HOME/bin:$HOME/.cargo/bin:$HOME/.fzf/bin:$PATH"
+export PATH="$HOME/.go/bin:$HOME/go/bin:$HOME/.opencode/bin:$HOME/.local/bin:$HOME/bin:$HOME/.cargo/bin:$HOME/.fzf/bin:$PATH"
 
 # Source the installation functions
 source "./install/install_functions.sh"
@@ -92,6 +92,7 @@ if [[ "$MINIMAL_INSTALL" == true ]]; then
     install_if_missing fd install_fd # Fast find alternative
     install_if_missing yq install_yq # Command-line yaml processor
     install_if_missing claude install_claude_code_cli # Claude code CLI
+    install_if_missing opencode install_opencode # OpenCode CLI
     install_if_missing gh install_gh # GitHub CLI for repo, PR, and issue management
     install_if_missing ngrok install_ngrok # Secure tunnels to localhost
     install_if_missing task install_task # Task runner for Taskfile.yml projects
@@ -139,6 +140,7 @@ else
     install_if_missing csvcut install_csvcut # CSV column extractor from csvkit
     install_if_missing parquet-tools install_parquet_tools # Parquet file viewer and processor
     install_if_missing claude install_claude_code_cli # Claude code CLI
+    install_if_missing opencode install_opencode # OpenCode CLI
     install_if_missing chafa install_chafa # ASCII art image renderer
     install_if_missing xclip install_xclip # Clipboard utility for tmux integration
     install_if_missing xsel install_xsel # Alternative clipboard utility for tmux
