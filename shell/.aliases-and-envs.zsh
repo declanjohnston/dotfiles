@@ -106,6 +106,9 @@ alias cc='claude'
 alias ccc='claude --continue'
 alias ccy='claude --dangerously-skip-permissions'
 alias cccy='claude --dangerously-skip-permissions --continue'
+
+alias oc='opencode'
+alias occ='opencode --continue'
 alias upd='update-packages'
 alias updq='update-packages --quiet'
 
