@@ -1,4 +1,11 @@
 export LANG='en_US.UTF-8'
+
+# Ensure 24-bit truecolor is advertised to TUIs (opencode, bubble tea, etc.).
+# SSH does not forward COLORTERM, so it ends up empty on remote boxes even
+# though iTerm/VSCode/etc. set it locally. Without this, dark theme
+# backgrounds get quantized to the nearest 256-color palette entry.
+: "${COLORTERM:=truecolor}"
+export COLORTERM
 #
 # Defines environment variables.
 #
