@@ -75,7 +75,10 @@ alias du='du -sh'
 
 # alias mmv='noglob zmv -W'
 alias refresh='source ~/.zshrc'
-alias ta="tmux new-session -A -s default"
+# Deterministic attach to `default`: create it detached if missing (silent
+# if it already exists), then explicitly attach to it. This avoids landing
+# on whichever session tmux-continuum happens to restore first on cold start.
+alias ta="tmux new-session -d -s default 2>/dev/null; tmux attach-session -t default"
 alias hxlog="hx $HOME/.cache/helix/helix.log"
 alias reset-tmux='rm -rf ~/.local/share/tmux/resurrect'
 alias zshrc='hx ~/.zshrc'
