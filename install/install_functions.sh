@@ -128,6 +128,7 @@ install_dotfiles() {
         "$home/.claude/CLAUDE.md"
         "$home/.claude/settings.json"
         "$home/.config/opencode/opencode.json"
+        "$home/.config/opencode/themes"
         "$home/.codex/config.toml"
         "$home/.zshrc"
         "$home/.zprofile"
@@ -303,6 +304,7 @@ install_dotfiles() {
 
         # opencode config
         "$dotfiles/opencode/opencode.json:$home/.config/opencode/opencode.json"
+        "$dotfiles/opencode/themes:$home/.config/opencode/themes"
 
         # codex config
         "$dotfiles/codex/config.toml:$home/.codex/config.toml"
