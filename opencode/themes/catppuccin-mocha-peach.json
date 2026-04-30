@@ -25,8 +25,8 @@
     "macSurface2": "#585b70",
     "macSurface1": "#45475a",
     "macSurface0": "#313244",
-    "macBase": "#1e1e2e",
-    "macMantle": "#181825",
+    "macBase": "#181825",
+    "macMantle": "#141420",
     "macCrust": "#11111b"
   },
   "theme": {
@@ -143,8 +143,8 @@
       "light": "macText"
     },
     "markdownHeading": {
-      "dark": "macAccent",
-      "light": "macAccent"
+      "dark": "macYellow",
+      "light": "macYellow"
     },
     "markdownLink": {
       "dark": "macBlue",
@@ -159,16 +159,16 @@
       "light": "macGreen"
     },
     "markdownBlockQuote": {
-      "dark": "macYellow",
-      "light": "macYellow"
+      "dark": "macSky",
+      "light": "macSky"
     },
     "markdownEmph": {
-      "dark": "macYellow",
-      "light": "macYellow"
+      "dark": "macRosewater",
+      "light": "macRosewater"
     },
     "markdownStrong": {
-      "dark": "macPeach",
-      "light": "macPeach"
+      "dark": "macMauve",
+      "light": "macMauve"
     },
     "markdownHorizontalRule": {
       "dark": "macSubtext0",
