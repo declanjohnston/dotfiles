@@ -75,6 +75,7 @@
     "frontend-design@claude-plugins-official": false
   },
   "skipDangerousModePermissionPrompt": true,
+  "theme": "custom:catppuccin-mocha-peach",
   "feedbackSurveyState": {
     "lastShownTime": 1754286002006
   }

@@ -298,6 +298,7 @@ install_dotfiles() {
         "$dotfiles/maintained_global_claude/hooks:$home/.claude/hooks"
         "$dotfiles/maintained_global_claude/skills:$home/.claude/skills"
         "$dotfiles/maintained_global_claude/plugins:$home/.claude/plugins"
+        "$dotfiles/maintained_global_claude/themes:$home/.claude/themes"
         "$dotfiles/maintained_global_claude/settings.json:$home/.claude/settings.json"
         "$dotfiles/maintained_global_claude/statusline.sh:$home/.claude/statusline.sh"
         "$dotfiles/maintained_global_claude/CLAUDE.md:$home/.claude/CLAUDE.md"

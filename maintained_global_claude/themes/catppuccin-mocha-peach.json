@@ -1,0 +1,44 @@
+{
+  "name": "Catppuccin Mocha Peach",
+  "base": "dark",
+  "overrides": {
+    "claude": "#fab387",
+    "text": "#cdd6f4",
+    "inverseText": "#11111b",
+    "inactive": "#a6adc8",
+    "subtle": "#6c7086",
+    "permission": "#cba6f7",
+    "remember": "#94e2d5",
+
+    "success": "#a6e3a1",
+    "error": "#f38ba8",
+    "warning": "#f9e2af",
+    "merged": "#cba6f7",
+
+    "promptBorder": "#cba6f7",
+    "planMode": "#89b4fa",
+    "autoAccept": "#a6e3a1",
+    "bashBorder": "#f9e2af",
+    "ide": "#74c7ec",
+    "fastMode": "#eba0ac",
+
+    "diffAdded": "#1e3a26",
+    "diffRemoved": "#4a1e2a",
+    "diffAddedDimmed": "#152820",
+    "diffRemovedDimmed": "#321822",
+    "diffAddedWord": "#2d5a3a",
+    "diffRemovedWord": "#6e2a3d",
+
+    "userMessageBackground": "#181819",
+    "selectionBg": "#45475a",
+
+    "red_FOR_SUBAGENTS_ONLY": "#f38ba8",
+    "blue_FOR_SUBAGENTS_ONLY": "#89b4fa",
+    "green_FOR_SUBAGENTS_ONLY": "#a6e3a1",
+    "yellow_FOR_SUBAGENTS_ONLY": "#f9e2af",
+    "purple_FOR_SUBAGENTS_ONLY": "#cba6f7",
+    "orange_FOR_SUBAGENTS_ONLY": "#fab387",
+    "pink_FOR_SUBAGENTS_ONLY": "#f5c2e7",
+    "cyan_FOR_SUBAGENTS_ONLY": "#94e2d5"
+  }
+}

@@ -44,6 +44,7 @@ shellcheck setup.sh install/*.sh       # Lint shell scripts
 | `maintained_global_claude/commands` | `~/.claude/commands/` |
 | `maintained_global_claude/hooks` | `~/.claude/hooks/` |
 | `maintained_global_claude/skills` | `~/.claude/skills/` |
+| `maintained_global_claude/themes` | `~/.claude/themes/` |
 | `maintained_global_claude/settings.json` | `~/.claude/settings.json` |
 
 The `force_replace_targets` array ensures Claude/Codex configs always match the repo (deletes stale targets before re-symlinking).
