@@ -82,6 +82,9 @@
   - ALWAYS use pathlib over os
   - Use comments sparingly, only write comments to explain anything non-standard
   - whenever you need to hardcode large strings (for sql queries, say), relegate all that code into a helper script called static.py
+  - always use strong type hints on every function signature (parameters and return types) and on non-trivial local variables
+  - never use `Any` (or `typing.Any`) — pick a concrete type, a `Protocol`, a `TypeVar`, or a union; if input is truly unknown, use `object` and narrow before use
+  - never use `**kwargs` (or `*args` for non-variadic APIs) — list parameters explicitly so signatures are typed and self-documenting; the only exception is when implementing a decorator or wrapping a third-party API that requires it
 
 # Pydantic Best Practices for Data Processing
 
