@@ -13,13 +13,11 @@ prep for the next (infra/architecture) meeting.
 
 **Core principle:** capture what the team decided about *product behavior* and *what ships
 in v1*, surface what they left undecided, and prepare the user to **run** the infra meeting.
-You are NOT designing the architecture and NOT breaking work into engineering tasks here.
 
 ## When to use
 
 - Right after a **product design** meeting; you have a transcript and/or notes.
-- **NOT** after the infra/architecture meeting → use `inference-flow-breakdown`.
-- **NOT** for breaking work into engineering sub-issues → that is `inference-flow-breakdown`, and it happens *after* the infra meeting.
+- **NOT** after the infra/architecture meeting, and **NOT** for breaking work into engineering sub-issues → that's `inference-flow-breakdown` (which runs *after* the infra meeting).
 
 ## The one rule people break
 
@@ -41,9 +39,8 @@ ticket about *how* it's built, stop — that's `inference-flow-breakdown`'s job.
    open (does X ship in v1? is it per-agent or per-project? who can do Y?), or the transcript
    is thin/informal, resolve them WITH the user via **`superpowers:brainstorming`** before
    committing artifacts. Never silently assume an answer that changes v1 scope.
-5. **Explore the codebase now.** Regardless of what you write down (step 7), you must
-   understand what already exists and what this feature builds around — that is the only way
-   to produce good open questions for the infra meeting.
+5. **Explore the codebase now.** Understand what already exists and what this feature builds
+   around — it's the only way to produce good open questions for the infra meeting.
 6. **Write the product spec doc** (committed) →
    `inference/.ai-docs/design-docs/<feature>/00-product-spec.md`: the grouped
    "A user can…" checklist with iteration tags, plus the v1-vs-later rationale.
@@ -51,7 +48,11 @@ ticket about *how* it's built, stop — that's `inference-flow-breakdown`'s job.
    `inference/.ai-docs/design-docs/<feature>/infra-prep.md`. **Mandatory, but never
    `git add` it** (uncommitted; not gitignored — just don't stage it).
 8. **Present the ticket drafts, get an explicit go-ahead, THEN write to Linear** (use the
-   Linear tools). Never create/update tickets before the user approves the drafts.
+   Linear tools). Never create/update tickets before the user approves the drafts. Keep tickets
+   **concise and scannable** — the "A user can…" checklist itself, not paragraphs of exposition
+   (rationale lives in the product-spec doc). If you're updating an existing high-level ticket,
+   keep the change comment concise too — what changed and why in a sentence or two (the whole
+   team reads it).
 
 ## Linear tickets this skill produces
 
@@ -73,9 +74,8 @@ Purpose: let the user walk in ready to **drive the architecture decisions**.
 | Reuse vs net-new | Optional | What can be built on/mirrored vs genuinely new. |
 | Integration points | Optional | Where the feature hooks in. |
 
-The optional sections are written in only if the user wants them (ask if they already know
-the area). The codebase exploration in step 5 happens either way — it feeds the mandatory
-open-questions section.
+Write the optional sections only if the user wants them (ask if they already know the area);
+the step-5 exploration feeds the mandatory open-questions section either way.
 
 ## Red flags — you're off the rails
 
@@ -83,6 +83,7 @@ open-questions section.
 - Requirements phrased as features ("CRUD on reports") instead of "A user can…".
 - A two-bucket v1/deferred split with no `[fast-follow]`/`[v2]`/`[future]` distinction.
 - Writing to Linear before showing drafts.
+- A verbose, essay-style ticket instead of a tight scannable checklist (depth belongs in the doc).
 - Guessing an answer to a question that changes what's in v1 instead of brainstorming it.
 
 ## Next step

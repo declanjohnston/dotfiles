@@ -3,6 +3,21 @@
 - always search for the latest modern 2025 libraries and use them when writing code
 - never write a function yourself when it can come from a library instead
 
+# Code comments
+
+- Comment the code as it exists now, not the story of how it got there. I *like* good comments: short function/block descriptions of purpose and contract, and "why" notes on non-obvious logic, edge cases, or gotchas. Keep those.
+- Never leave process/history narration comments — these are the dead giveaway that an AI wrote the diff, and I want them gone:
+  - temporal/status comments: "deferred to v2", "TODO: revisit later", "for now we just…", "temporary workaround"
+  - change-narration comments: "previously this used X", "refactored from Y", "renamed from…", "moved out of…" — anything describing the diff or what the code *used to be* instead of what it *is*
+  - comments that just restate what self-evident code already says, line by line
+- Rule of thumb: if a comment stops making sense once the PR is merged and its history is forgotten, it doesn't belong inline. That context goes in the PR description or repo docs, not the code.
+
+# git
+
+- Never "sign" commits: do not add `Co-Authored-By:` trailers, "Generated with…" lines, or any AI attribution to commit messages or PR bodies. Plain messages only.
+- **NEVER stage with `git add -A`, `git add .`, `git add -u`, or `git commit -a`.** These sweep in whatever untracked junk happens to be in the tree (scratch plans, handoffs, `.codex/`, design notes) and silently commit it — this has happened and produced a 23k-line scratch dump in a PR. ALWAYS stage explicit paths: `git add path/to/file1 path/to/file2`. Before every commit, run `git status` / `git diff --cached --name-only` and confirm the staged set is EXACTLY the files you intended — nothing else. This rule also applies to any subagent/implementer prompt you write: instruct them to stage explicit paths, never `git add -A`.
+- Don't commit agent scratch artifacts — superpowers plans/handoffs/specs under `docs/superpowers/`, `HANDOFF.md` / `handoff-*.md`, `.codex/`, and similar are throwaway and must never be committed. If you see them in `git status`, they are NOT yours to stage.
+
 # python guidelines
 
 - always use `uv` for dependency management
@@ -198,3 +213,7 @@ flat |= parent.nested_field.model_dump(by_alias=True)
 - Use react whenever possible
 - Always start frontend development by doing a web search to find new + modern libraries that could make my requests simpler
 - always prefer using dependencies and packages compared to writing things yourself.
+
+# TypeScript guidelines
+
+- When writing TypeScript, read `~/.claude/typescript-guidelines.md` first and follow it. It covers types, service/layering structure, consumer wiring, config/env, error handling, async/DB, tests, and migrations — and flags common AI pitfalls to avoid.

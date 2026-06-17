@@ -1,5 +1,7 @@
 local
 __pycache__
+.DS_Store
+**/.DS_Store
 **/.credentials.json
 **/.update.lock
 **/logs/
@@ -7,7 +9,6 @@ __pycache__
 # Ignore specific subdirectories in maintained_global_claude
 maintained_global_claude/.checksums
 maintained_global_claude/.claude/
-maintained_global_claude/.DS_Store
 maintained_global_claude/archive/
 maintained_global_claude/debug/
 maintained_global_claude/downloads/

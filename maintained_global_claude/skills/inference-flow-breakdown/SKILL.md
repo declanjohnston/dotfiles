@@ -34,13 +34,22 @@ into engineering sub-issues.
    sub-issue(s) that deliver it.** If any requirement has no home, add a sub-issue. Surface
    the map so the gap is visible before writing.
 6. **Present the proposed set, get an explicit go-ahead, THEN create the sub-issues** under
-   the v1 ticket in Linear. Each description is dev-scoped and references the design docs.
+   the v1 ticket in Linear. **Sub-issues are detailed and self-contained** (see the sub-issue
+   rules) — unlike the high-level v1/product tickets, this is the layer where the substance
+   lives.
 
 ## Sub-issue rules
 
 - **Dev-scoped, ≈PR-sized** — one logical chunk of implementation per ticket (a layer, a
   service, a table+store, a channel+consumer), not a single user requirement and not the
   whole feature.
+- **Detailed and self-contained.** Each sub-issue carries everything someone needs to pick it
+  up and execute: what it delivers (the v1 requirement(s) it covers), the relevant agreed
+  design for this piece (data shapes, storage, services/queues, integration points) drawn from
+  the design doc, acceptance criteria / definition of done, dependencies, and pointers to the
+  committed design docs. **Stop short of code-level detail and the implementation plan** —
+  superpowers still writes and executes that. Target: enough that an engineer or AI can build
+  the superpowers plan straight from the ticket without re-deriving the design.
 - **Consolidate toward ~10–15** tickets total. Don't explode into dozens of tiny ones.
 - **Reuse is not a ticket.** Existing systems you build on (mirrored patterns, existing
   stores, shared services) are integration points inside other tickets, not their own.
@@ -56,6 +65,7 @@ into engineering sub-issues.
 - Creating sub-issues without having written the committed arch/data-model doc.
 - No explicit requirement→ticket coverage map (you "think" it's covered).
 - A ticket for work that's pure reuse of an existing system.
+- A thin, under-specified sub-issue that just links the design doc with too little context to pick up and build — or the opposite: code-level steps / the implementation plan dumped in (that's superpowers' job).
 - Writing to Linear before showing drafts and getting a go-ahead.
 - One ticket per user requirement (too granular) or one ticket for all of v1 (too coarse).
 

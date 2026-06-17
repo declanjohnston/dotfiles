@@ -28,4 +28,20 @@ phase, then invoke that skill.
 
 Requirements are user-POV ("A user can…"); iteration tags `[v1]`/`[fast-follow]`/`[v2]`/`[future]`;
 design docs committed to `inference/.ai-docs/design-docs/<feature>/`; always present drafts and
-get a go-ahead before writing to Linear.
+get a go-ahead before writing to Linear. **Two ticket layers, two levels of detail:** the
+high-level product + v1 tickets stay simple and scannable — just the "A user can…" user stories
+(a boss can grok them at a glance; sub-issues and their progress auto-list under the v1 ticket).
+The **v1 sub-issues, by contrast, are detailed and self-contained** — enough context for an
+engineer or AI to pick one up and build it (and to produce the superpowers plan), but never
+code-level detail or the implementation plan itself. Long-form rationale and architecture still
+live in the committed repo docs. **Comments/updates on the high-level tickets stay concise too:**
+when one changes, note what changed and why in a sentence or two — the whole team reads these, so
+no walls of text.
+
+**Drive ticket status as you work, and let status — not comments — track progress.** Move a
+ticket to **In Progress** when you start building it, to **In Review** once the work is done and
+up for review (PR open), and to **Done** once it's merged. The status field conveys progress on
+its own, so don't post comments announcing it ("this is complete", "started on this") — that's
+noise the status already carries. Edit a ticket's content or leave a comment ONLY when the ticket
+has **materially changed** (scope/requirements moved) or you made a **clarifying decision** on
+something that was underspecified — and keep that note short.
