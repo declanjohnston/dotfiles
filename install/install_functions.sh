@@ -302,6 +302,7 @@ install_dotfiles() {
         "$dotfiles/maintained_global_claude/settings.json:$home/.claude/settings.json"
         "$dotfiles/maintained_global_claude/statusline.sh:$home/.claude/statusline.sh"
         "$dotfiles/maintained_global_claude/CLAUDE.md:$home/.claude/CLAUDE.md"
+        "$dotfiles/maintained_global_claude/typescript-guidelines.md:$home/.claude/typescript-guidelines.md"
 
         # opencode config
         "$dotfiles/opencode/opencode.json:$home/.config/opencode/opencode.json"
