@@ -280,6 +280,120 @@ HEADER
 gum_success "Generated cursor-overrides.json"
 
 # ===================================================================
+# 6. Generate Codex app theme
+# ===================================================================
+gum_info "Generating codex-app-theme.toml..."
+
+codex_theme_file="$OUTPUT_DIR/codex-app-theme.toml"
+codex_config_file="$SCRIPT_DIR/../codex/config.toml"
+
+cat > "$codex_theme_file" << HEADER
+[desktop.appearanceLightChromeTheme]
+accent = "$peach"
+contrast = 60
+ink = "$text"
+opaqueWindows = false
+surface = "$base"
+
+[desktop.appearanceLightChromeTheme.fonts]
+
+[desktop.appearanceLightChromeTheme.semanticColors]
+diffAdded = "$green"
+diffRemoved = "$red"
+skill = "$mauve"
+
+[desktop.appearanceDarkChromeTheme]
+accent = "$peach"
+contrast = 60
+ink = "$text"
+opaqueWindows = false
+surface = "$base"
+
+[desktop.appearanceDarkChromeTheme.fonts]
+
+[desktop.appearanceDarkChromeTheme.semanticColors]
+diffAdded = "$green"
+diffRemoved = "$red"
+skill = "$mauve"
+HEADER
+
+upsert_desktop_setting() {
+    local config_file="$1"
+    local key="$2"
+    local value="$3"
+    local tmp_file="${config_file}.tmp"
+    local file_mode
+    file_mode=$(stat -f '%Lp' "$config_file")
+
+    if rg -q "^${key}[[:space:]]*=" "$config_file"; then
+        awk -v key="$key" -v value="$value" '
+            $0 ~ "^" key "[[:space:]]*=" { $0 = key " = " value }
+            { print }
+        ' "$config_file" > "$tmp_file"
+        chmod "$file_mode" "$tmp_file"
+        mv "$tmp_file" "$config_file"
+        return 0
+    fi
+
+    if rg -q '^\[desktop\]$' "$config_file"; then
+        awk -v key="$key" -v value="$value" '
+            /^\[desktop\]$/ { print; print key " = " value; next }
+            { print }
+        ' "$config_file" > "$tmp_file"
+        chmod "$file_mode" "$tmp_file"
+        mv "$tmp_file" "$config_file"
+        return 0
+    fi
+
+    {
+        cat "$config_file"
+        printf '\n[desktop]\n%s = %s\n' "$key" "$value"
+    } > "$tmp_file"
+    chmod "$file_mode" "$tmp_file"
+    mv "$tmp_file" "$config_file"
+}
+
+upsert_codex_chrome_theme() {
+    local config_file="$1"
+    local theme_file="$2"
+    local tmp_file="${config_file}.tmp"
+    local file_mode
+    file_mode=$(stat -f '%Lp' "$config_file")
+
+    awk '
+        /^darkCodeThemeId[[:space:]]*=/ { next }
+        /^lightCodeThemeId[[:space:]]*=/ { next }
+        /^\[desktop\.appearanceDarkChromeTheme([.\]]|$)/ { skip = 1; next }
+        /^\[desktop\.appearanceLightChromeTheme([.\]]|$)/ { skip = 1; next }
+        /^\[desktop\.darkChromeTheme([.\]]|$)/ { skip = 1; next }
+        /^\[desktop\.lightChromeTheme([.\]]|$)/ { skip = 1; next }
+        skip && /^\[/ { skip = 0 }
+        !skip { print }
+    ' "$config_file" > "$tmp_file"
+
+    {
+        cat "$tmp_file"
+        printf '\n'
+        cat "$theme_file"
+    } > "$config_file"
+
+    chmod "$file_mode" "$config_file"
+    rm -f "$tmp_file"
+}
+
+if [[ -f "$codex_config_file" ]]; then
+    upsert_desktop_setting "$codex_config_file" "theme" '"dark"'
+    upsert_desktop_setting "$codex_config_file" "appearanceLightCodeThemeId" '"catppuccin"'
+    upsert_desktop_setting "$codex_config_file" "appearanceDarkCodeThemeId" '"catppuccin"'
+    upsert_codex_chrome_theme "$codex_config_file" "$codex_theme_file"
+    gum_success "Updated codex/config.toml"
+else
+    gum_dim "Skipped codex/config.toml update (file not found)"
+fi
+
+gum_success "Generated codex-app-theme.toml"
+
+# ===================================================================
 # Summary
 # ===================================================================
 echo ""

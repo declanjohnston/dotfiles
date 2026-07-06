@@ -1245,9 +1245,39 @@ install_ngrok() {
 }
 
 install_codex() {
-    gum_info "Installing OpenAI Codex CLI..."
-    npm install -g @openai/codex
-    gum_success "Codex installed successfully."
+    gum_info "Installing OpenAI Codex..."
+
+    if [[ "$OS_TYPE" == "mac" ]]; then
+        brew install --cask codex
+
+        if [[ -d "/Applications/Codex.app" ]]; then
+            gum_dim "Codex desktop app is already installed."
+        else
+            brew install --cask codex-app
+        fi
+
+        mkdir -p "$HOME/bin"
+        if [[ -x "/Applications/Codex.app/Contents/Resources/codex" ]]; then
+            ln -sf "/Applications/Codex.app/Contents/Resources/codex" "$HOME/bin/codex"
+        fi
+        if npm list -g --depth=0 @openai/codex >/dev/null 2>&1; then
+            gum_info "Removing legacy npm Codex package..."
+            npm uninstall -g @openai/codex
+        fi
+    elif [[ "$OS_TYPE" == "linux" ]]; then
+        if command -v npm >/dev/null 2>&1; then
+            npm install -g @openai/codex
+        else
+            gum_warning "npm is required to install Codex on Linux."
+            return 1
+        fi
+    fi
+
+    if command -v codex >/dev/null 2>&1; then
+        gum_success "Codex installed ($(codex --version 2>/dev/null || echo 'unknown version'))."
+    else
+        gum_warning "Codex was installed, but codex is not available on PATH."
+    fi
 }
 
 install_opencode() {

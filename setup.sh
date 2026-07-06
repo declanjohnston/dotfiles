@@ -40,6 +40,7 @@ install_if_missing less install_less
 install_if_missing jq install_jq
 install_if_missing bc install_bc
 install_if_missing file install_file
+install_if_missing rg install_rg
 
 # Generate theme files before other setup
 gum_info "Generating theme files..."
@@ -95,6 +96,7 @@ if [[ "$MINIMAL_INSTALL" == true ]]; then
     install_if_missing opencode install_opencode # OpenCode CLI
     install_if_missing gh install_gh # GitHub CLI for repo, PR, and issue management
     install_if_missing ngrok install_ngrok # Secure tunnels to localhost
+    install_codex # OpenAI Codex CLI and desktop app
     install_if_missing task install_task # Task runner for Taskfile.yml projects
 
     # install tools that depend on uv (must be after uv installation)
@@ -148,7 +150,7 @@ else
     install_if_missing gh install_gh # GitHub CLI for repo, PR, and issue management
     install_if_missing ngrok install_ngrok # Secure tunnels to localhost
     install_if_missing task install_task # Task runner for Taskfile.yml projects
-    install_if_missing codex install_codex # OpenAI Codex CLI
+    install_codex # OpenAI Codex CLI and desktop app
     install_if_missing typst install_typst # Typst typesetting system for document compilation
     # install_if_missing watchexec install_cargo_tools # Watchexec CLI for file watching
     install_if_missing mdterm install_mdterm # Rich markdown renderer (used by fzf-preview)

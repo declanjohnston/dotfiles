@@ -1,0 +1,27 @@
+[desktop.appearanceLightChromeTheme]
+accent = "#fab387"
+contrast = 60
+ink = "#cdd6f4"
+opaqueWindows = false
+surface = "#181825"
+
+[desktop.appearanceLightChromeTheme.fonts]
+
+[desktop.appearanceLightChromeTheme.semanticColors]
+diffAdded = "#a6e3a1"
+diffRemoved = "#f38ba8"
+skill = "#cba6f7"
+
+[desktop.appearanceDarkChromeTheme]
+accent = "#fab387"
+contrast = 60
+ink = "#cdd6f4"
+opaqueWindows = false
+surface = "#181825"
+
+[desktop.appearanceDarkChromeTheme.fonts]
+
+[desktop.appearanceDarkChromeTheme.semanticColors]
+diffAdded = "#a6e3a1"
+diffRemoved = "#f38ba8"
+skill = "#cba6f7"

@@ -1,5 +1,142 @@
-model = "gpt-5-codex"
+model = "gpt-5.5"
+notify = [
+  "/Users/declan/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient",
+  "turn-ended",
+]
+model_reasoning_effort = "medium"
 
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/Codex.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/declan/.codex"
+CODEX_HOME = "/Users/declan/.codex"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "60e4902788f207f88fd09344dfeafe07769488bdb2924bbb12b322c3b9d2b999"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.623.101652"
+CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
+
+[marketplaces.openai-bundled]
+last_updated = "2026-07-06T20:48:47Z"
+source_type = "local"
+source = "/Users/declan/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-07-06T19:47:48Z"
+source_type = "local"
+source = "/Users/declan/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[marketplaces.claude-plugins-official]
+last_updated = "2026-07-06T20:30:49Z"
+last_revision = "b47ef13563948b2e5fa99451b3ead4f670a3bef8"
+source_type = "git"
+source = "https://github.com/anthropics/claude-plugins-official.git"
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."context7@claude-plugins-official"]
+enabled = true
+
+[plugins."figma@claude-plugins-official"]
+enabled = true
+
+[features]
+js_repl = false
+
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+USE_BUILTIN_RIPGREP = "1"
+
+[desktop]
+theme = "dark"
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = false
+dock-icon-preference = "app-default"
+followUpQueueMode = "queue"
+appearanceLightCodeThemeId = "catppuccin"
+appearanceDarkCodeThemeId = "catppuccin"
+
+[desktop.open-in-target-preferences]
+global = "cursor"
+
+[desktop.open-in-target-preferences.perPath]
+"/Users/declan/dev/parrot" = "cursor"
+
+[projects."/Users/declan/dev/parrot"]
+trust_level = "trusted"
+
+[projects."/Users/declan/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/declan/Documents/Codex/2026-07-06/check-out-the-color-scheme-i"]
+trust_level = "trusted"
+
+[projects."/Users/declan/Documents/Codex/2026-07-06/new-chat"]
+trust_level = "trusted"
+
+[hooks.state]
+
+[hooks.state."/Users/declan/dev/parrot/.codex/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:bbff36ad6955262d3689d761b6b686baa6682608097247c0c5b066f6412aa3a8"
+
+
+[desktop.appearanceLightChromeTheme]
+accent = "#fab387"
+contrast = 60
+ink = "#cdd6f4"
+opaqueWindows = false
+surface = "#181825"
+
+[desktop.appearanceLightChromeTheme.fonts]
+
+[desktop.appearanceLightChromeTheme.semanticColors]
+diffAdded = "#a6e3a1"
+diffRemoved = "#f38ba8"
+skill = "#cba6f7"
+
+[desktop.appearanceDarkChromeTheme]
+accent = "#fab387"
+contrast = 60
+ink = "#cdd6f4"
+opaqueWindows = false
+surface = "#181825"
+
+[desktop.appearanceDarkChromeTheme.fonts]
+
+[desktop.appearanceDarkChromeTheme.semanticColors]
+diffAdded = "#a6e3a1"
+diffRemoved = "#f38ba8"
+skill = "#cba6f7"
