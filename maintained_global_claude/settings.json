@@ -74,6 +74,20 @@
     "rust-analyzer-lsp@claude-plugins-official": false,
     "frontend-design@claude-plugins-official": false
   },
+  "extraKnownMarketplaces": {
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    },
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    }
+  },
   "skipDangerousModePermissionPrompt": true,
   "theme": "custom:catppuccin-mocha-peach",
   "feedbackSurveyState": {

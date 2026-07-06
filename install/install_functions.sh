@@ -436,7 +436,18 @@ install_cargo() {
 
 install_uv() {
     curl -LsSf https://astral.sh/uv/install.sh | sh
+    ensure_uv_python
+}
 
+ensure_uv_python() {
+    if ! uv python find 3.12 &>/dev/null; then
+        uv python install 3.12
+    fi
+}
+
+uv_tool_install() {
+    ensure_uv_python
+    uv tool install --python 3.12 "$@"
 }
 
 
@@ -595,12 +606,13 @@ install_mactop() {
 }
 
 install_ctop() {
-    if [[ "$OS_TYPE" == "linux" ]]; then
-        sudo curl -Lo /usr/local/bin/ctop https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64
-    elif [[ "$OS_TYPE" == "mac" ]]; then
-        sudo curl -Lo /usr/local/bin/ctop https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-darwin-amd64
+    if [[ "$OS_TYPE" == "mac" ]]; then
+        brew install ctop
+    elif [[ "$OS_TYPE" == "linux" ]]; then
+        mkdir -p "$HOME/bin"
+        curl -Lo "$HOME/bin/ctop" https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64
+        chmod +x "$HOME/bin/ctop"
     fi
-    sudo chmod +x /usr/local/bin/ctop
     gum_success "ctop installed successfully."
 }
 
@@ -749,7 +761,7 @@ install_xsel() {
 
 
 install_nbpreview() {
-    uv tool install nbcat
+    uv_tool_install nbcat
 }
 
 _tmux_version_at_least() {
@@ -861,11 +873,8 @@ install_file() {
 
 install_pq() {
     mkdir -p "$HOME/bin"
-    if [[ "$OS_TYPE" == "linux" ]]; then
-        wget -O "$HOME/bin/pq" "https://raw.githubusercontent.com/kouta-kun/pq/main/bin/pq" && chmod +x "$HOME/bin/pq"
-    elif [[ "$OS_TYPE" == "mac" ]]; then
-        wget -O "$HOME/bin/pq" "https://raw.githubusercontent.com/kouta-kun/pq/main/bin/pq" && chmod +x "$HOME/bin/pq"
-    fi
+    curl -fsSL -o "$HOME/bin/pq" "https://raw.githubusercontent.com/kouta-kun/pq/main/bin/pq"
+    chmod +x "$HOME/bin/pq"
     gum_success "pq installed successfully."
 }
 
@@ -962,8 +971,18 @@ install_zprezto() {
     gum_success "zprezto installed successfully."
 }
 
+meslo_font_installed() {
+    if [[ "$OS_TYPE" == "mac" ]]; then
+        brew list --cask font-meslo-lg-nerd-font &>/dev/null
+    elif command -v fc-list >/dev/null 2>&1; then
+        fc-list -q "MesloLGS NF"
+    else
+        return 1
+    fi
+}
+
 install_meslo_font() {
-    if ! fc-list -q "MesloLGS NF"; then
+    if ! meslo_font_installed; then
         gum_info "Installing MesloLGS NF font..."
         if [[ "$OS_TYPE" == "mac" ]]; then
             brew install --cask font-meslo-lg-nerd-font
@@ -1103,26 +1122,26 @@ install_vscode_langservers_extracted() {
 }
 
 install_rich_cli() {
-    uv tool install rich-cli
+    uv_tool_install rich-cli
     gum_success "rich-cli installed successfully."
 }
 
 install_markitdown() {
-    uv tool install "markitdown[all]"
+    uv_tool_install "markitdown[all]"
     gum_success "markitdown installed successfully."
 }
 
 install_visidata() {
-    uv tool install --with lxml --with pdfminer.six visidata
+    uv_tool_install --with lxml --with pdfminer.six visidata
     gum_success "visidata installed successfully."
 }
 
 install_ty() {
-    uv tool install ty@latest
+    uv_tool_install ty@latest
 }
 
 install_yt_dlp() {
-    uv tool install "yt-dlp[default]"
+    uv_tool_install "yt-dlp[default]"
     gum_success "yt-dlp installed successfully."
 }
 
@@ -1189,14 +1208,8 @@ install_uwu() {
 
     # Make binary executable and move to PATH
     chmod +x dist/uwu-cli
-
-    if [[ "$OS_TYPE" == "mac" ]]; then
-        # On macOS, use /usr/local/bin without sudo
-        sudo mv dist/uwu-cli /usr/local/bin/uwu-cli
-    else
-        # On Linux, need sudo for /usr/local/bin
-        sudo mv dist/uwu-cli /usr/local/bin/uwu-cli
-    fi
+    mkdir -p "$HOME/bin"
+    mv dist/uwu-cli "$HOME/bin/uwu-cli"
 
     # Clean up temp directory
     cd /
