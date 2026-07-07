@@ -139,6 +139,8 @@ base=$(jq -r '.base' "$COLORS_FILE")
 text=$(jq -r '.text' "$COLORS_FILE")
 surface0=$(jq -r '.surface0' "$COLORS_FILE")
 surface1=$(jq -r '.surface1' "$COLORS_FILE")
+surface2=$(jq -r '.surface2' "$COLORS_FILE")
+overlay1=$(jq -r '.overlay1' "$COLORS_FILE")
 rosewater=$(jq -r '.rosewater' "$COLORS_FILE")
 red=$(jq -r '.red' "$COLORS_FILE")
 green=$(jq -r '.green' "$COLORS_FILE")
@@ -210,7 +212,74 @@ mantle=$(jq -r '.mantle' "$COLORS_FILE")
 
 cat > "$OUTPUT_DIR/cursor-overrides.json" << HEADER
 {
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
+  "window.autoDetectColorScheme": false,
   "workbench.colorCustomizations": {
+    "editor.background": "$base",
+    "editor.foreground": "$text",
+    "sideBar.background": "$mantle",
+    "sideBar.foreground": "$text",
+    "sideBarSectionHeader.background": "$base",
+    "activityBar.background": "$crust",
+    "activityBar.foreground": "$text",
+    "terminal.background": "$base",
+    "terminal.foreground": "$text",
+    "titleBar.activeBackground": "$crust",
+    "titleBar.activeForeground": "$text",
+    "titleBar.inactiveBackground": "$mantle",
+    "titleBar.inactiveForeground": "$subtext1",
+    "tab.activeBackground": "$base",
+    "tab.activeForeground": "$text",
+    "tab.inactiveBackground": "$mantle",
+    "tab.inactiveForeground": "$subtext1",
+    "editorGroupHeader.tabsBackground": "$mantle",
+    "panel.background": "$base",
+    "panel.border": "$surface0",
+    "statusBar.background": "$crust",
+    "statusBar.foreground": "$text",
+    "input.background": "$surface0",
+    "input.foreground": "$text",
+    "input.border": "$surface1",
+    "dropdown.background": "$surface0",
+    "dropdown.foreground": "$text",
+    "list.activeSelectionBackground": "$surface0",
+    "list.activeSelectionForeground": "$text",
+    "list.hoverBackground": "$surface1",
+    "list.focusBackground": "$surface1",
+    "editorGutter.background": "$base",
+    "editorLineNumber.foreground": "$surface1",
+    "editorLineNumber.activeForeground": "$lavender",
+    "breadcrumb.background": "$base",
+    "breadcrumb.foreground": "$text",
+    "breadcrumbPicker.background": "$mantle",
+    "editorWidget.background": "$mantle",
+    "editorWidget.border": "$surface0",
+    "editorHoverWidget.background": "$mantle",
+    "editorHoverWidget.border": "$surface0",
+    "editorSuggestWidget.background": "$mantle",
+    "editorSuggestWidget.border": "$surface0",
+    "peekView.border": "$surface0",
+    "peekViewEditor.background": "$base",
+    "peekViewResult.background": "$mantle",
+    "peekViewTitle.background": "$mantle",
+    "scrollbar.shadow": "$crust",
+    "scrollbarSlider.background": "$surface0",
+    "scrollbarSlider.hoverBackground": "$surface1",
+    "scrollbarSlider.activeBackground": "$surface2",
+    "minimap.background": "$base",
+    "editorGroup.border": "$surface0",
+    "editorGroup.dropBackground": "$surface0",
+    "editorGroupHeader.border": "$surface0",
+    "tab.border": "$base",
+    "tab.activeBorder": "$base",
+    "tab.unfocusedActiveBorder": "$base",
+    "sideBarTitle.foreground": "$text",
+    "sideBarSectionHeader.foreground": "$text",
+    "textLink.foreground": "$blue",
+    "textLink.activeForeground": "$sky",
+    "editorCursor.foreground": "$rosewater",
+    "editorCursor.background": "$crust",
     "[Catppuccin Mocha]": {
       "editor.background": "$base",
       "editor.foreground": "$text",
@@ -271,7 +340,11 @@ cat > "$OUTPUT_DIR/cursor-overrides.json" << HEADER
       "tab.activeBorder": "$base",
       "tab.unfocusedActiveBorder": "$base",
       "sideBarTitle.foreground": "$text",
-      "sideBarSectionHeader.foreground": "$text"
+      "sideBarSectionHeader.foreground": "$text",
+      "textLink.foreground": "$blue",
+      "textLink.activeForeground": "$sky",
+      "editorCursor.foreground": "$rosewater",
+      "editorCursor.background": "$crust"
     }
   }
 }
@@ -280,7 +353,165 @@ HEADER
 gum_success "Generated cursor-overrides.json"
 
 # ===================================================================
-# 6. Generate Codex app theme
+# 6. Generate Cursor theme extension
+# ===================================================================
+gum_info "Generating Cursor theme extension..."
+
+cursor_extension_dir="$OUTPUT_DIR/cursor-theme-extension"
+cursor_theme_dir="$cursor_extension_dir/themes"
+mkdir -p "$cursor_theme_dir"
+
+cat > "$cursor_extension_dir/package.json" << HEADER
+{
+  "name": "catppuccin-mocha-generated",
+  "displayName": "Catppuccin Mocha Generated",
+  "description": "Generated Catppuccin Mocha theme from dotfiles/theme/colors.json.",
+  "version": "0.0.1",
+  "publisher": "parrot",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Catppuccin Mocha",
+        "uiTheme": "vs-dark",
+        "path": "./themes/catppuccin-mocha-color-theme.json"
+      }
+    ]
+  }
+}
+HEADER
+
+cat > "$cursor_theme_dir/catppuccin-mocha-color-theme.json" << HEADER
+{
+  "name": "Catppuccin Mocha",
+  "type": "dark",
+  "colors": {
+    "editor.background": "$base",
+    "editor.foreground": "$text",
+    "sideBar.background": "$mantle",
+    "sideBar.foreground": "$text",
+    "sideBarSectionHeader.background": "$base",
+    "activityBar.background": "$crust",
+    "activityBar.foreground": "$text",
+    "terminal.background": "$base",
+    "terminal.foreground": "$text",
+    "titleBar.activeBackground": "$crust",
+    "titleBar.activeForeground": "$text",
+    "titleBar.inactiveBackground": "$mantle",
+    "titleBar.inactiveForeground": "$subtext1",
+    "tab.activeBackground": "$base",
+    "tab.activeForeground": "$text",
+    "tab.inactiveBackground": "$mantle",
+    "tab.inactiveForeground": "$subtext1",
+    "editorGroupHeader.tabsBackground": "$mantle",
+    "panel.background": "$base",
+    "panel.border": "$surface0",
+    "statusBar.background": "$crust",
+    "statusBar.foreground": "$text",
+    "input.background": "$surface0",
+    "input.foreground": "$text",
+    "input.border": "$surface1",
+    "dropdown.background": "$surface0",
+    "dropdown.foreground": "$text",
+    "list.activeSelectionBackground": "$surface0",
+    "list.activeSelectionForeground": "$text",
+    "list.hoverBackground": "$surface1",
+    "list.focusBackground": "$surface1",
+    "editorGutter.background": "$base",
+    "editorLineNumber.foreground": "$surface1",
+    "editorLineNumber.activeForeground": "$lavender",
+    "breadcrumb.background": "$base",
+    "breadcrumb.foreground": "$text",
+    "breadcrumbPicker.background": "$mantle",
+    "editorWidget.background": "$mantle",
+    "editorWidget.border": "$surface0",
+    "editorHoverWidget.background": "$mantle",
+    "editorHoverWidget.border": "$surface0",
+    "editorSuggestWidget.background": "$mantle",
+    "editorSuggestWidget.border": "$surface0",
+    "peekView.border": "$surface0",
+    "peekViewEditor.background": "$base",
+    "peekViewResult.background": "$mantle",
+    "peekViewTitle.background": "$mantle",
+    "scrollbar.shadow": "$crust",
+    "scrollbarSlider.background": "$surface0",
+    "scrollbarSlider.hoverBackground": "$surface1",
+    "scrollbarSlider.activeBackground": "$surface2",
+    "minimap.background": "$base",
+    "editorGroup.border": "$surface0",
+    "editorGroup.dropBackground": "$surface0",
+    "editorGroupHeader.border": "$surface0",
+    "tab.border": "$base",
+    "tab.activeBorder": "$base",
+    "tab.unfocusedActiveBorder": "$base",
+    "sideBarTitle.foreground": "$text",
+    "sideBarSectionHeader.foreground": "$text",
+    "textLink.foreground": "$blue",
+    "textLink.activeForeground": "$sky",
+    "editorCursor.foreground": "$rosewater",
+    "editorCursor.background": "$crust"
+  },
+  "tokenColors": [
+    {
+      "scope": ["comment", "punctuation.definition.comment"],
+      "settings": { "foreground": "$overlay1", "fontStyle": "italic" }
+    },
+    {
+      "scope": ["string", "constant.other.symbol"],
+      "settings": { "foreground": "$green" }
+    },
+    {
+      "scope": ["constant.numeric", "constant.language", "support.constant"],
+      "settings": { "foreground": "$peach" }
+    },
+    {
+      "scope": ["keyword", "storage.type", "storage.modifier"],
+      "settings": { "foreground": "$mauve" }
+    },
+    {
+      "scope": ["entity.name.function", "support.function"],
+      "settings": { "foreground": "$blue" }
+    },
+    {
+      "scope": ["variable", "meta.definition.variable.name"],
+      "settings": { "foreground": "$text" }
+    },
+    {
+      "scope": ["entity.name.type", "support.type", "entity.name.class"],
+      "settings": { "foreground": "$yellow" }
+    },
+    {
+      "scope": ["entity.name.tag", "support.class.component"],
+      "settings": { "foreground": "$red" }
+    },
+    {
+      "scope": ["entity.other.attribute-name", "support.type.property-name"],
+      "settings": { "foreground": "$teal" }
+    }
+  ],
+  "semanticTokenColors": {
+    "variable.readonly": "$peach",
+    "property": "$teal",
+    "function": "$blue",
+    "method": "$blue",
+    "class": "$yellow",
+    "interface": "$yellow",
+    "enum": "$yellow",
+    "keyword": "$mauve",
+    "comment": "$overlay1"
+  }
+}
+HEADER
+
+gum_success "Generated Cursor theme extension"
+
+# ===================================================================
+# 7. Generate Codex app theme
 # ===================================================================
 gum_info "Generating codex-app-theme.toml..."
 

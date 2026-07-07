@@ -1326,13 +1326,38 @@ install_vivid() {
 
 merge_cursor_colors() {
     local cursor_settings="$HOME/Library/Application Support/Cursor/User/settings.json"
+    local cursor_storage="$HOME/Library/Application Support/Cursor/User/globalStorage/storage.json"
+    local cursor_state_db="$HOME/Library/Application Support/Cursor/User/globalStorage/state.vscdb"
     local overrides="$HOME/dotfiles/theme/generated/cursor-overrides.json"
+    local generated_extension="$HOME/dotfiles/theme/generated/cursor-theme-extension"
+    local cursor_extension="$HOME/.cursor/extensions/parrot.catppuccin-mocha-generated-0.0.1"
 
     if [[ -f "$cursor_settings" ]] && [[ -f "$overrides" ]]; then
         gum_info "Merging Catppuccin colors into Cursor settings..."
+        if [[ -d "$generated_extension" ]]; then
+            mkdir -p "$HOME/.cursor/extensions"
+            rm -rf "$cursor_extension"
+            ln -s "$generated_extension" "$cursor_extension"
+            gum_success "Cursor Catppuccin theme extension linked"
+        fi
+
         local tmp_file="${cursor_settings}.tmp"
         jq -s '.[0] * .[1]' "$cursor_settings" "$overrides" > "$tmp_file" && mv "$tmp_file" "$cursor_settings"
         gum_success "Cursor colors updated"
+
+        if [[ -f "$cursor_storage" ]]; then
+            gum_info "Aligning Cursor Glass theme with dark editor theme..."
+            local storage_tmp="${cursor_storage}.tmp"
+            jq '.["glass.theme.settingsId"] = "Cursor Dark"' "$cursor_storage" > "$storage_tmp" && mv "$storage_tmp" "$cursor_storage"
+            gum_success "Cursor Glass theme updated"
+        fi
+
+        if [[ -f "$cursor_state_db" ]] && command -v sqlite3 >/dev/null 2>&1; then
+            gum_info "Clearing Cursor cached theme data..."
+            sqlite3 "$cursor_state_db" "delete from ItemTable where key = 'colorThemeData';" || true
+            sqlite3 "$cursor_state_db" "insert or replace into ItemTable(key, value) values('glass.theme.settingsId', 'Cursor Dark');" || true
+            gum_success "Cursor cached theme data cleared"
+        fi
     else
         gum_dim "Cursor not installed or overrides not generated - skipping color merge"
     fi

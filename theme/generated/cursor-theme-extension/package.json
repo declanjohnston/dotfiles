@@ -1,0 +1,22 @@
+{
+  "name": "catppuccin-mocha-generated",
+  "displayName": "Catppuccin Mocha Generated",
+  "description": "Generated Catppuccin Mocha theme from dotfiles/theme/colors.json.",
+  "version": "0.0.1",
+  "publisher": "parrot",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Catppuccin Mocha",
+        "uiTheme": "vs-dark",
+        "path": "./themes/catppuccin-mocha-color-theme.json"
+      }
+    ]
+  }
+}
