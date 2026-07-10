@@ -215,6 +215,7 @@ cat > "$OUTPUT_DIR/cursor-overrides.json" << HEADER
   "workbench.colorTheme": "Catppuccin Mocha",
   "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
   "window.autoDetectColorScheme": false,
+  "terminal.integrated.fontFamily": "MesloLGS NF, MesloLGS Nerd Font, Menlo, monospace",
   "workbench.colorCustomizations": {
     "editor.background": "$base",
     "editor.foreground": "$text",
@@ -623,6 +624,81 @@ else
 fi
 
 gum_success "Generated codex-app-theme.toml"
+
+# ===================================================================
+# 8. Generate Cursor agent (Glass) theme
+# ===================================================================
+# The Cursor agent/chat window ("Glass") is themed separately from the
+# editor. It reads a custom theme from app storage under the key
+# glass.theme.customThemesV1 and selects it via glass.theme.settingsId.
+# Here we emit the full customThemesV1 wrapper object; merge_cursor_colors
+# installs it into Cursor's storage.
+gum_info "Generating cursor-glass-theme.json..."
+
+glass_theme_id="catppuccin-mocha-generated"
+
+jq --arg id "$glass_theme_id" '
+  . as $c |
+  {
+    _v: 1,
+    themes: {
+      ($id): {
+        name: "Catppuccin Mocha",
+        source: "user",
+        definition: {
+          name: "Catppuccin Mocha",
+          appearance: "dark",
+          highContrast: false,
+          sidebar: $c.base,
+          chrome: $c.crust,
+          editor: $c.base,
+          base: $c.text,
+          accent: $c.blue,
+          actionLabel: $c.crust,
+          brand: $c.peach,
+          focus: $c.lavender,
+          success: $c.green,
+          warn: $c.yellow,
+          danger: $c.red,
+          added: $c.green,
+          modified: $c.yellow,
+          removed: $c.red,
+          untracked: $c.teal,
+          terminalAnsiBlack: $c.surface1,
+          terminalAnsiRed: $c.red,
+          terminalAnsiYellow: $c.yellow,
+          terminalAnsiGreen: $c.green,
+          terminalAnsiCyan: $c.teal,
+          terminalAnsiBlue: $c.blue,
+          terminalAnsiMagenta: $c.pink,
+          terminalAnsiWhite: $c.subtext1,
+          terminalAnsiBrightBlack: $c.surface2,
+          terminalAnsiBrightRed: $c.red,
+          terminalAnsiBrightYellow: $c.yellow,
+          terminalAnsiBrightGreen: $c.green,
+          terminalAnsiBrightCyan: $c.teal,
+          terminalAnsiBrightBlue: $c.blue,
+          terminalAnsiBrightMagenta: $c.pink,
+          terminalAnsiBrightWhite: $c.subtext0,
+          red: $c.red,
+          orange: $c.peach,
+          yellow: $c.yellow,
+          green: $c.green,
+          cyan: $c.teal,
+          blue: $c.blue,
+          magenta: $c.pink,
+          purple: $c.mauve,
+          diffAddedLineBackground: ($c.green + "33"),
+          diffAddedTextBackground: ($c.green + "22"),
+          diffRemovedLineBackground: ($c.red + "33"),
+          diffRemovedTextBackground: ($c.red + "22")
+        }
+      }
+    }
+  }
+' "$COLORS_FILE" > "$OUTPUT_DIR/cursor-glass-theme.json"
+
+gum_success "Generated cursor-glass-theme.json"
 
 # ===================================================================
 # Summary

@@ -2,6 +2,7 @@
   "workbench.colorTheme": "Catppuccin Mocha",
   "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
   "window.autoDetectColorScheme": false,
+  "terminal.integrated.fontFamily": "MesloLGS NF, MesloLGS Nerd Font, Menlo, monospace",
   "workbench.colorCustomizations": {
     "editor.background": "#181825",
     "editor.foreground": "#cdd6f4",

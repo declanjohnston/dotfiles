@@ -1331,6 +1331,13 @@ merge_cursor_colors() {
     local overrides="$HOME/dotfiles/theme/generated/cursor-overrides.json"
     local generated_extension="$HOME/dotfiles/theme/generated/cursor-theme-extension"
     local cursor_extension="$HOME/.cursor/extensions/parrot.catppuccin-mocha-generated-0.0.1"
+    local colors_file="$HOME/dotfiles/theme/colors.json"
+    local glass_theme_file="$HOME/dotfiles/theme/generated/cursor-glass-theme.json"
+    # The Cursor agent ("Glass") window uses a self-contained custom theme.
+    # It is selected by settingsId "cursor-custom-theme:<id>" where <id> is the
+    # key used in generate-theme.sh section 8.
+    local glass_theme_id="catppuccin-mocha-generated"
+    local glass_settings_id="cursor-custom-theme:$glass_theme_id"
 
     if [[ -f "$cursor_settings" ]] && [[ -f "$overrides" ]]; then
         gum_info "Merging Catppuccin colors into Cursor settings..."
@@ -1345,17 +1352,39 @@ merge_cursor_colors() {
         jq -s '.[0] * .[1]' "$cursor_settings" "$overrides" > "$tmp_file" && mv "$tmp_file" "$cursor_settings"
         gum_success "Cursor colors updated"
 
-        if [[ -f "$cursor_storage" ]]; then
-            gum_info "Aligning Cursor Glass theme with dark editor theme..."
-            local storage_tmp="${cursor_storage}.tmp"
-            jq '.["glass.theme.settingsId"] = "Cursor Dark"' "$cursor_storage" > "$storage_tmp" && mv "$storage_tmp" "$cursor_storage"
-            gum_success "Cursor Glass theme updated"
+        # Theme the Cursor agent (Glass) window with the generated custom theme.
+        if [[ -f "$cursor_storage" ]] && [[ -f "$glass_theme_file" ]]; then
+            gum_info "Applying Catppuccin theme to Cursor agent (Glass) window..."
+            local custom_themes glass_bg storage_tmp="${cursor_storage}.tmp"
+            custom_themes=$(jq -c . "$glass_theme_file")
+            glass_bg=$(jq -r '.base' "$colors_file")
+            jq --arg ct "$custom_themes" --arg sid "$glass_settings_id" --arg bg "$glass_bg" '
+                .["glass.theme.customThemesV1"] = $ct
+                | .["glass.theme.settingsId"] = $sid
+                | .["glass.theme.darkSettingsId"] = $sid
+                | .["glass.theme.lightSettingsId"] = $sid
+                | .["glass.theme.detectColorScheme"] = false
+                | (if has("glassSplash") then .glassSplash.background = $bg else . end)
+            ' "$cursor_storage" > "$storage_tmp" && mv "$storage_tmp" "$cursor_storage"
+            gum_success "Cursor agent (Glass) theme updated"
         fi
 
         if [[ -f "$cursor_state_db" ]] && command -v sqlite3 >/dev/null 2>&1; then
             gum_info "Clearing Cursor cached theme data..."
             sqlite3 "$cursor_state_db" "delete from ItemTable where key = 'colorThemeData';" || true
-            sqlite3 "$cursor_state_db" "insert or replace into ItemTable(key, value) values('glass.theme.settingsId', 'Cursor Dark');" || true
+            # Mirror the Glass theme selection into the state DB (some Cursor
+            # builds read application-scoped storage from here). Values are
+            # plain text; the JSON blob has no single quotes, but escape defensively.
+            if [[ -f "$glass_theme_file" ]]; then
+                local ct_sql
+                ct_sql=$(jq -c . "$glass_theme_file")
+                ct_sql=${ct_sql//\'/\'\'}
+                sqlite3 "$cursor_state_db" "insert or replace into ItemTable(key, value) values('glass.theme.settingsId', '$glass_settings_id');" || true
+                sqlite3 "$cursor_state_db" "insert or replace into ItemTable(key, value) values('glass.theme.darkSettingsId', '$glass_settings_id');" || true
+                sqlite3 "$cursor_state_db" "insert or replace into ItemTable(key, value) values('glass.theme.lightSettingsId', '$glass_settings_id');" || true
+                sqlite3 "$cursor_state_db" "insert or replace into ItemTable(key, value) values('glass.theme.detectColorScheme', 'false');" || true
+                sqlite3 "$cursor_state_db" "insert or replace into ItemTable(key, value) values('glass.theme.customThemesV1', '$ct_sql');" || true
+            fi
             gum_success "Cursor cached theme data cleared"
         fi
     else
