@@ -88,10 +88,10 @@
       }
     }
   },
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "custom:catppuccin-mocha-peach",
   "feedbackSurveyState": {
     "lastShownTime": 1754286002006
-  },
-  "tui": "fullscreen"
+  }
 }
