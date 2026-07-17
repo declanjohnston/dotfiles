@@ -604,8 +604,9 @@ upsert_codex_chrome_theme() {
     ' "$config_file" > "$tmp_file"
 
     {
-        cat "$tmp_file"
-        printf '\n'
+        # $(<file) strips trailing newlines, preventing blank lines from
+        # accumulating across repeated runs
+        printf '%s\n\n' "$(<"$tmp_file")"
         cat "$theme_file"
     } > "$config_file"
 
@@ -699,6 +700,23 @@ jq --arg id "$glass_theme_id" '
 ' "$COLORS_FILE" > "$OUTPUT_DIR/cursor-glass-theme.json"
 
 gum_success "Generated cursor-glass-theme.json"
+
+# ===================================================================
+# 9. Generate Slack theme string
+# ===================================================================
+# Slack custom themes are a comma-separated string of 10 hex colors,
+# pasted into Preferences → Themes → "Create a custom theme".
+# Slot order: Column BG, Menu BG Hover, Active Item, Active Item Text,
+# Hover Item, Text Color, Active Presence, Mention Badge,
+# Top Nav BG, Top Nav Text
+gum_info "Generating slack-theme.txt..."
+
+printf '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' \
+    "$base" "$surface0" "$peach" "$crust" "$surface0" \
+    "$text" "$green" "$red" "$crust" "$text" \
+    > "$OUTPUT_DIR/slack-theme.txt"
+
+gum_success "Generated slack-theme.txt"
 
 # ===================================================================
 # Summary
