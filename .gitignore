@@ -29,3 +29,7 @@ maintained_global_claude/todos/
 # will be tracked normally without needing -f
 maintained_global_claude/plugins/marketplaces
 maintained_global_claude/cache/
+# Karabiner writes its own state into the symlinked config dir
+karabiner/automatic_backups/
+karabiner/assets/
+karabiner/*.bak

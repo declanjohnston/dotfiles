@@ -68,6 +68,7 @@ if [[ "$MINIMAL_INSTALL" == false ]]; then
     install_contexts # Contexts window switcher (macOS only)
     install_raycast # Raycast launcher (macOS only)
     install_wispr_flow # Wispr Flow voice dictation (macOS only)
+    install_karabiner_elements # Karabiner-Elements key remapper (macOS only)
 fi
 
 # install essentials

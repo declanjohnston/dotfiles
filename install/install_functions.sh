@@ -129,6 +129,7 @@ install_dotfiles() {
         "$home/.claude/settings.json"
         "$home/.config/opencode/opencode.json"
         "$home/.config/opencode/themes"
+        "$home/.config/karabiner"
         "$home/.codex/config.toml"
         "$home/.zshrc"
         "$home/.zprofile"
@@ -310,6 +311,10 @@ install_dotfiles() {
 
         # codex config
         "$dotfiles/codex/config.toml:$home/.codex/config.toml"
+
+        # karabiner (whole dir: Karabiner rewrites karabiner.json atomically, which
+        # replaces a symlinked file with a regular one)
+        "$dotfiles/karabiner:$home/.config/karabiner"
     )
 
     # Create all symlinks in a single loop
@@ -1059,6 +1064,22 @@ install_wispr_flow() {
         fi
     else
         gum_warning "Wispr Flow is only available on macOS."
+    fi
+}
+
+install_karabiner_elements() {
+    if [[ "$OS_TYPE" == "mac" ]]; then
+        if [ ! -d "/Applications/Karabiner-Elements.app" ]; then
+            gum_info "Installing Karabiner-Elements..."
+            brew install --cask karabiner-elements
+            gum_success "Karabiner-Elements installed successfully."
+            # The driver needs a one-time manual approval that cannot be scripted.
+            gum_warning "Grant Karabiner Input Monitoring access: System Settings > Privacy & Security > Input Monitoring"
+        else
+            gum_dim "Karabiner-Elements is already installed."
+        fi
+    else
+        gum_warning "Karabiner-Elements is only available on macOS."
     fi
 }
 
