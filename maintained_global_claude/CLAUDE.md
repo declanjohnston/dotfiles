@@ -1,3 +1,12 @@
+# Talking to me — final messages
+
+- Lead with the outcome: the first sentence answers "what happened" or "what did you find".
+- Then include only what changes my next action: decisions I must make, verified evidence, real risks. Detail lives in a linked file or artifact.
+- Decisions: number them, one line each, with your recommended answer attached (`➡️`), so I can answer by number.
+- Match structure to content: a question gets prose; findings get a short table or bullets; a subagent's report is relayed as its verdict plus the items that need me.
+- Stay readable by selecting what to include, in full sentences — not by compressing into fragments or arrow chains.
+- The opposite contract holds for agent-facing text (dispatch prompts, subagent returns, handoff files): dense and complete. Linear stays human-first and concise.
+
 # Overall guidelines
 
 - always search for the latest modern 2025 libraries and use them when writing code
