@@ -93,5 +93,18 @@
   "theme": "custom:catppuccin-mocha-peach",
   "feedbackSurveyState": {
     "lastShownTime": 1754286002006
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "zsh ~/.claude/hooks/block-bulk-git-staging.sh"
+          }
+        ]
+      }
+    ]
   }
 }
