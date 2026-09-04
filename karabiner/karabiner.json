@@ -1,56 +1,45 @@
 {
-  "global": {
-    "check_for_updates_on_startup": true,
-    "show_in_menu_bar": true,
-    "show_profile_name_in_menu_bar": false
-  },
-  "profiles": [
-    {
-      "name": "Default profile",
-      "selected": true,
-      "virtual_hid_keyboard": {
-        "keyboard_type_v2": "ansi"
-      },
-      "complex_modifications": {
-        "rules": [
-          {
-            "description": "Single-key macropad: Tab -> Control+Option+F13 (Wispr Flow push-to-talk)",
-            "manipulators": [
-              {
-                "type": "basic",
-                "from": {
-                  "key_code": "tab",
-                  "modifiers": {
-                    "optional": ["any"]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "f13",
-                    "modifiers": [
-                      "right_control",
-                      "right_option"
-                    ]
-                  }
-                ],
-                "conditions": [
-                  {
-                    "type": "device_if",
-                    "identifiers": [
-                      {
-                        "description": "Unnamed single-key macropad (0x8808:0x6600)",
-                        "vendor_id": 34824,
-                        "product_id": 26112,
-                        "is_keyboard": true
-                      }
-                    ]
-                  }
+    "global": { "show_in_menu_bar": false },
+    "profiles": [
+        {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "Single-key macropad: Tab -> Control+Option+F13 (Wispr Flow push-to-talk)",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "description": "Unnamed single-key macropad (0x8808:0x6600)",
+                                                "is_keyboard": true,
+                                                "product_id": 26112,
+                                                "vendor_id": 34824
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "tab",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f13",
+                                        "modifiers": ["right_control", "right_option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    }
                 ]
-              }
-            ]
-          }
-        ]
-      }
-    }
-  ]
+            },
+            "name": "Default profile",
+            "selected": true,
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+        }
+    ]
 }
