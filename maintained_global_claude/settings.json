@@ -60,6 +60,7 @@
     ],
     "deny": []
   },
+  "model": "fable",
   "statusLine": {
     "type": "command",
     "command": "zsh ~/.claude/statusline.sh"
