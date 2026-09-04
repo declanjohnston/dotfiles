@@ -1161,9 +1161,12 @@ install_ty() {
     uv_tool_install ty@latest
 }
 
+# YouTube changes extractors constantly, so a pinned yt-dlp goes stale within
+# weeks. Always upgrade instead of skipping when the binary already exists.
 install_yt_dlp() {
-    uv_tool_install "yt-dlp[default]"
-    gum_success "yt-dlp installed successfully."
+    gum_info "Installing/upgrading yt-dlp..."
+    uv_tool_install --upgrade "yt-dlp[default]"
+    gum_success "yt-dlp is up to date."
 }
 
 install_iterm2_shell_integration() {
