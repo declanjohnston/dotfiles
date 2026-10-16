@@ -557,7 +557,8 @@ upsert_desktop_setting() {
     local file_mode
     file_mode=$(stat -c '%a' "$config_file" 2>/dev/null || stat -f '%Lp' "$config_file")
 
-    if rg -q "^${key}[[:space:]]*=" "$config_file"; then
+    # grep, not rg: this runs before the tool installs, and a missing rg reads as "no match"
+    if grep -q "^${key}[[:space:]]*=" "$config_file"; then
         awk -v key="$key" -v value="$value" '
             $0 ~ "^" key "[[:space:]]*=" { $0 = key " = " value }
             { print }
@@ -567,7 +568,7 @@ upsert_desktop_setting() {
         return 0
     fi
 
-    if rg -q '^\[desktop\]$' "$config_file"; then
+    if grep -q '^\[desktop\]$' "$config_file"; then
         awk -v key="$key" -v value="$value" '
             /^\[desktop\]$/ { print; print key " = " value; next }
             { print }

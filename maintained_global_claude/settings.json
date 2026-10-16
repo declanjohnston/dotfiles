@@ -100,13 +100,19 @@
         "source": "github",
         "repo": "thedotmack/claude-mem"
       }
+    },
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
     }
   },
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "custom:catppuccin-mocha-peach",
+  "switchModelsOnFlag": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754286002006
-  },
-  "switchModelsOnFlag": true
+  }
 }

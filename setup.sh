@@ -49,6 +49,11 @@ gum_info "Generating theme files..."
 # install zsh (must happen first, before other tools)
 install_if_missing zsh install_zsh
 
+# install_zsh only switches the login shell when it installs zsh, so cover a preinstalled zsh too
+if [[ "$OS_TYPE" == "linux" && "$(getent passwd "$USER" | cut -d: -f7)" != *zsh ]]; then
+    sudo chsh -s "$(command -v zsh)" "$USER"
+fi
+
 # install tmux early (required by TPM and install_dotfiles)
 # Called directly (not via install_if_missing) because install_tmux has its own version check
 install_tmux
@@ -97,7 +102,6 @@ if [[ "$MINIMAL_INSTALL" == true ]]; then
     install_if_missing opencode install_opencode # OpenCode CLI
     install_if_missing gh install_gh # GitHub CLI for repo, PR, and issue management
     install_if_missing ngrok install_ngrok # Secure tunnels to localhost
-    install_codex # OpenAI Codex CLI and desktop app
     install_if_missing task install_task # Task runner for Taskfile.yml projects
 
     # install tools that depend on uv (must be after uv installation)

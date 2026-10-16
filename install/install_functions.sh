@@ -440,7 +440,8 @@ install_cargo() {
 
 
 install_uv() {
-    curl -LsSf https://astral.sh/uv/install.sh | sh
+    # PATH comes from shell/.paths.zsh; the installer would append to the symlinked rc files
+    curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh
     ensure_uv_python
 }
 
@@ -502,7 +503,8 @@ install_fzf() {
     if [ ! -d "$HOME/.fzf" ]; then
         git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
     fi
-    "$HOME/.fzf/install" --all --no-update-rc
+    # --bin only: ~/.fzf.zsh and ~/.fzf.bash are symlinks into this repo and must not be regenerated
+    "$HOME/.fzf/install" --bin
 }
 
 install_helix() {
@@ -654,6 +656,7 @@ install_claude_plugin_marketplaces() {
     local -a marketplaces=(
         "superpowers-marketplace|obra/superpowers-marketplace"
         "thedotmack|thedotmack/claude-mem"
+        "claude-plugins-official|anthropics/claude-plugins-official"
     )
 
     gum_info "Installing Claude plugin marketplaces..."
@@ -668,7 +671,7 @@ install_claude_plugin_marketplaces() {
 
         if echo "$installed" | grep -q "$name"; then
             gum_dim "  $name already installed, updating..."
-            claude plugin marketplace update "$name" 2>/dev/null
+            claude plugin marketplace update "$name" 2>/dev/null || gum_warning "  Failed to update $name"
         else
             gum_info "  Adding $name..."
             if claude plugin marketplace add "$repo" 2>/dev/null; then
@@ -696,7 +699,7 @@ install_claude_plugin_marketplaces() {
     for plugin in "${plugins[@]}"; do
         if echo "$installed_plugins" | grep -q "$plugin"; then
             gum_dim "  $plugin already installed, updating..."
-            claude plugin update "$plugin" 2>/dev/null
+            claude plugin update "$plugin" 2>/dev/null || gum_warning "  Failed to update $plugin"
         else
             gum_info "  Installing $plugin..."
             if claude plugin install "$plugin" 2>/dev/null; then
@@ -820,7 +823,7 @@ install_tmux() {
 
 install_rg() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        wget -O "$HOME/bin/rg" "n0p.me/bin/rg" && chmod +x "$HOME/bin/rg"
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y ripgrep
     elif [[ "$OS_TYPE" == "mac" ]]; then
         brew install ripgrep
     fi
@@ -829,7 +832,10 @@ install_rg() {
 
 install_fd() {
     if [[ "$OS_TYPE" == "linux" ]]; then
-        wget -O "$HOME/bin/fd" "n0p.me/bin/fd" && chmod +x "$HOME/bin/fd"
+        # Debian/Ubuntu ship the binary as fdfind
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y fd-find
+        mkdir -p "$HOME/.local/bin"
+        ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
     elif [[ "$OS_TYPE" == "mac" ]]; then
         brew install fd
     fi
@@ -992,7 +998,7 @@ install_meslo_font() {
         if [[ "$OS_TYPE" == "mac" ]]; then
             brew install --cask font-meslo-lg-nerd-font
         else
-            sudo apt install fontconfig
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y fontconfig
             # Direct download method for Linux
             mkdir -p "$HOME/.local/share/fonts"
             curl -L "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf" \
@@ -1305,7 +1311,7 @@ install_codex() {
 }
 
 install_opencode() {
-    curl -fsSL https://opencode.ai/install | bash || true
+    curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path || true
     export PATH="$HOME/.opencode/bin:$PATH"
 
     if ! command -v opencode >/dev/null 2>&1 && command -v npm >/dev/null 2>&1; then
