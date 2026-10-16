@@ -555,7 +555,7 @@ upsert_desktop_setting() {
     local value="$3"
     local tmp_file="${config_file}.tmp"
     local file_mode
-    file_mode=$(stat -f '%Lp' "$config_file")
+    file_mode=$(stat -c '%a' "$config_file" 2>/dev/null || stat -f '%Lp' "$config_file")
 
     if rg -q "^${key}[[:space:]]*=" "$config_file"; then
         awk -v key="$key" -v value="$value" '
@@ -590,7 +590,7 @@ upsert_codex_chrome_theme() {
     local theme_file="$2"
     local tmp_file="${config_file}.tmp"
     local file_mode
-    file_mode=$(stat -f '%Lp' "$config_file")
+    file_mode=$(stat -c '%a' "$config_file" 2>/dev/null || stat -f '%Lp' "$config_file")
 
     awk '
         /^darkCodeThemeId[[:space:]]*=/ { next }
