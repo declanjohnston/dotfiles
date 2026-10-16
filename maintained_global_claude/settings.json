@@ -61,6 +61,19 @@
     "deny": []
   },
   "model": "fable",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "zsh ~/.claude/hooks/block-bulk-git-staging.sh"
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "zsh ~/.claude/statusline.sh"
@@ -95,17 +108,5 @@
   "feedbackSurveyState": {
     "lastShownTime": 1754286002006
   },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "zsh ~/.claude/hooks/block-bulk-git-staging.sh"
-          }
-        ]
-      }
-    ]
-  }
+  "switchModelsOnFlag": true
 }

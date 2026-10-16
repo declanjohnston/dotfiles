@@ -112,7 +112,6 @@ trust_level = "trusted"
 [hooks.state."/Users/declan/dev/parrot/.codex/hooks.json:pre_tool_use:0:0"]
 trusted_hash = "sha256:bbff36ad6955262d3689d761b6b686baa6682608097247c0c5b066f6412aa3a8"
 
-
 [desktop.appearanceLightChromeTheme]
 accent = "#fab387"
 contrast = 60
